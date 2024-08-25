@@ -1,12 +1,18 @@
-package com.sparta.balloondelivery.menu.entity;
+package com.sparta.balloondelivery.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Entity(name = "p_menus")
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Menu {
     @Id
     private UUID id;
