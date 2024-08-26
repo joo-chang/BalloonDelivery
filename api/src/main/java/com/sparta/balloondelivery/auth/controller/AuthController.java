@@ -4,6 +4,7 @@ import com.sparta.balloondelivery.auth.dto.SignupReqDto;
 import com.sparta.balloondelivery.auth.service.AuthService;
 import com.sparta.balloondelivery.data.entity.User;
 import com.sparta.balloondelivery.util.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +22,12 @@ public class AuthController {
         this.authService = authService;
     }
 
+
+
     @PostMapping("/signUp")
-    public ApiResponse<?> signUp(@RequestBody SignupReqDto request) {
+    public ApiResponse<?> signUp(@Valid @RequestBody SignupReqDto request) {
+
         User user = authService.signUp(request);
-        return ApiResponse.success("200", user.getId(), "회원가입에 성공했습니다.");
+        return ApiResponse.success("success",user.getId());
     }
 }
