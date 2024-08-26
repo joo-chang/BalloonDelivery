@@ -1,25 +1,32 @@
 package com.sparta.balloondelivery.data.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Entity(name = "p_users")
-@Getter
-@Builder
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity(name = "p_users")
 public class User {
     @Id
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String email;
-    private String nickname;
+    private String username;
     private String password;
-    private Enum<UserRole> role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+    public User(String email, String username, String password, String role) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = UserRole.valueOf(role);
+    }
+
 }
