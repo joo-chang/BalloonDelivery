@@ -18,7 +18,6 @@ public enum ErrorCode {
     EXIST_USER("이미 존재하는 사용자입니다."),
     INVALID_CREDENTIALS("아이디나 비밀번호가 올바르지 않습니다."),
     INVALID_ROLE("유효하지 않은 권한입니다."),
-
     ;
 
 

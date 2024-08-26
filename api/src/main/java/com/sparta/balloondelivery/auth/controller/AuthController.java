@@ -1,5 +1,6 @@
 package com.sparta.balloondelivery.auth.controller;
 
+import com.sparta.balloondelivery.auth.dto.SignInReqDto;
 import com.sparta.balloondelivery.auth.dto.SignupReqDto;
 import com.sparta.balloondelivery.auth.service.AuthService;
 import com.sparta.balloondelivery.data.entity.User;
@@ -29,5 +30,11 @@ public class AuthController {
 
         User user = authService.signUp(request);
         return ApiResponse.success("success",user.getId());
+    }
+
+    @PostMapping("/signIn")
+    public ApiResponse<?> signIn(@RequestBody SignInReqDto request) {
+        String accessToken = authService.signIn(request);
+        return ApiResponse.success("success",accessToken);
     }
 }
