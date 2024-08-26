@@ -1,4 +1,4 @@
-package com.sparta.balloondelivery.entity;
+package com.sparta.balloondelivery.data.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Menu {
+    // id 이름은 menu_id
     @Id
+    @Column(name = "menu_id")
     private UUID id;
     private String name;
     private Integer price;

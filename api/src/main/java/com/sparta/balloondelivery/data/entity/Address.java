@@ -1,6 +1,6 @@
-package com.sparta.balloondelivery.entity;
+package com.sparta.balloondelivery.data.entity;
 
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Entity(name = "p_restaurants")
+@Entity(name = "p_addresses")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Restaurant {
+public class Address {
     @Id
-    private UUID  restaurant_id;
-
+    @Column(name = "address_id")
+    private UUID id;
 }

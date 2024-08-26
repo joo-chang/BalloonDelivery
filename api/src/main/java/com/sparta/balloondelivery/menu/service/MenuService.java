@@ -2,7 +2,7 @@ package com.sparta.balloondelivery.menu.service;
 
 import com.sparta.balloondelivery.exception.BaseException;
 import com.sparta.balloondelivery.menu.dto.MenuRequestDto;
-import com.sparta.balloondelivery.repository.MenuRepository;
+import com.sparta.balloondelivery.data.repository.MenuRepository;
 import com.sparta.balloondelivery.util.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
