@@ -1,6 +1,7 @@
 package com.sparta.balloondelivery.exception;
 
 import com.sparta.balloondelivery.util.ApiResponse;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Order(1)
 public class AuthExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
