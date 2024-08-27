@@ -21,8 +21,8 @@ public class AuthConfig {
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/auth/signIn").permitAll()
                         .requestMatchers("/auth/signUp").permitAll()
-                        .requestMatchers("/management/**").hasAnyRole("MANAGER", "MASTER")
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
