@@ -8,8 +8,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.stereotype.Component;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -44,7 +44,6 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
             Claims claims = claimsJws.getPayload();
             exchange.getRequest().mutate()
                     .header("X-User-Id", claims.get("user_id").toString())
-                    .header("X-Role", claims.get("role").toString())
                     .build();
             return true;
         } catch (Exception e) {
