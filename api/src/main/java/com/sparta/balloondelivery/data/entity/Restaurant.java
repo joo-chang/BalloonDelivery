@@ -1,32 +1,44 @@
 package com.sparta.balloondelivery.data.entity;
 
-
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
-@Entity(name = "p_restaurants")
-@Getter
-@Builder
+@Entity
+@Table(name = "p_restaurants")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Restaurant {
+
     @Id
-    @Column(name = "restaurant_id")
-    private UUID  id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "restaurant_id", updatable = false, nullable = false)
+    private UUID restaurantId;
+
+    @Column(nullable = false, length = 255)
     private String name;
+
+    @Column(length = 255)
     private String content;
+
+    @Column(length = 100)
     private String phone;
 
-    @OneToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable = false)
+    private Location location;
 }

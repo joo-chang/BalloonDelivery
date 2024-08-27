@@ -1,12 +1,12 @@
 package com.sparta.balloondelivery.data.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Entity(name = "p_users")
 @Getter
@@ -16,10 +16,11 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @Column(name = "user_id")
-    private Long id;
+    private UUID userId;
 
     private String email;
-    private String nickname;
-    private String password;
-    private Enum<UserRole> role;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
 }
