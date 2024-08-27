@@ -17,6 +17,7 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    private boolean deletedYN;
 
     @OneToOne
     @JoinColumn(name = "address_id")

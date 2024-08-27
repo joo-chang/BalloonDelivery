@@ -1,7 +1,6 @@
 package com.sparta.balloondelivery.user.service;
 
 import com.sparta.balloondelivery.data.entity.User;
-import com.sparta.balloondelivery.data.entity.UserRole;
 import com.sparta.balloondelivery.data.repository.UserRepository;
 import com.sparta.balloondelivery.exception.BaseException;
 import com.sparta.balloondelivery.user.dto.UserReqDto;
@@ -35,11 +34,18 @@ public class UserService {
         return userResDto;
     }
 
-    public User updateUser(String userId, UserReqDto userReqDto) {
+    public void updateUser(String userId, UserReqDto userReqDto) {
         User user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER));
         user.setUsername(userReqDto.getUsername());
         user.setPassword(passwordEncoder.encode(userReqDto.getPassword()));
-        return userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    public void deleteUser(String userId) {
+        User user = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER));
+        user.setDeletedYN(true);
+        userRepository.save(user);
     }
 }

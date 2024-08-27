@@ -31,6 +31,12 @@ public class UserController {
         return ApiResponse.success("OK",userId,"회원 수정 성공");
     }
 
+    @DeleteMapping("")
+    public ApiResponse<?> deleteUser(@RequestHeader(value = "X-User-Id", required = true) String userId) {
+        userService.deleteUser(userId);
+        return ApiResponse.success("OK",userId,"회원 삭제 성공");
+    }
+
 
 
 
