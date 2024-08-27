@@ -13,7 +13,8 @@ public class RestaurantCreateResponse {
     private UUID userId;
     private UUID categoryId;
     private UUID locationId;
+    private UUID addressId;
 
-    public RestaurantCreateResponse(UUID restaurantId, String name, String content, String phone, UUID userId, UUID categoryId, UUID locationId) {
+    public RestaurantCreateResponse(UUID restaurantId, String name, String content, String phone, UUID userId, UUID categoryId, UUID locationId, UUID addressId) {
     }
 }

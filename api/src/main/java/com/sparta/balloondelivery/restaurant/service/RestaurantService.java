@@ -1,13 +1,7 @@
 package com.sparta.balloondelivery.restaurant.service;
 
-import com.sparta.balloondelivery.data.entity.Category;
-import com.sparta.balloondelivery.data.entity.Location;
-import com.sparta.balloondelivery.data.entity.Restaurant;
-import com.sparta.balloondelivery.data.entity.User;
-import com.sparta.balloondelivery.data.repository.CategoryRepository;
-import com.sparta.balloondelivery.data.repository.LocationRepository;
-import com.sparta.balloondelivery.data.repository.RestaurantRepository;
-import com.sparta.balloondelivery.data.repository.UserRepository;
+import com.sparta.balloondelivery.data.entity.*;
+import com.sparta.balloondelivery.data.repository.*;
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantCreateRequest;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantCreateResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +17,7 @@ public class RestaurantService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
+    private final AddressRepository addressRepository;
 
     public RestaurantCreateResponse createRestaurant(UUID userId, RestaurantCreateRequest request) {
 
@@ -34,6 +29,13 @@ public class RestaurantService {
 
         Location location = locationRepository.findById(request.getLocationId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid location ID"));
+
+        Address address = new Address();
+        address.setAddress1(request.getAddress1());
+        address.setAddress2(request.getAddress2());
+        address.setAddress3(request.getAddress3());
+
+        Address savedAddress = addressRepository.save(address);
 
         Restaurant restaurant = new Restaurant();
         restaurant.setName(request.getName());
@@ -52,7 +54,8 @@ public class RestaurantService {
                 savedRestaurant.getPhone(),
                 savedRestaurant.getUser().getUserId(),
                 savedRestaurant.getCategory().getCategoryId(),
-                savedRestaurant.getLocation().getLocationId()
+                savedRestaurant.getLocation().getLocationId(),
+                savedAddress.getAddressId()
         );
     }
 }
