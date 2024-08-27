@@ -75,15 +75,6 @@ public class RestaurantService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
 
-        return new RestaurantInfoResponse(
-                restaurant.getRestaurantId(),
-                restaurant.getName(),
-                restaurant.getContent(),
-                restaurant.getPhone(),
-                restaurant.getUser().getUserId(),
-                restaurant.getCategory().getCategoryId(),
-                restaurant.getLocation().getLocationId(),
-                restaurant.getAddress().getAddressId()
-        );
+        return RestaurantInfoResponse.toDto(restaurant);
     }
 }
