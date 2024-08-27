@@ -11,9 +11,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class AuthService {
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${jwt.secret}")
     String secretKey;
@@ -32,9 +36,10 @@ public class AuthService {
     @Value("${ADMIN_TOKEN}")
     String ADMIN_TOKEN;
 
-    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, RedisTemplate<String, String> redisTemplate) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
+        this.redisTemplate = redisTemplate;
     }
 
     public User signUp(SignupReqDto request) {
@@ -63,15 +68,21 @@ public class AuthService {
             throw new BaseException(ErrorCode.INVALID_CREDENTIALS);
         }
 
-        return createAccessToken(user.getEmail(), user.getRole());
+        saveUserRole(user.getId(), user.getRole());
+        return createAccessToken(user.getId(), user.getRole());
     }
 
-    public String createAccessToken(String userId, UserRole role) {
+    public void saveUserRole(Long userId, UserRole role) {
+        redisTemplate.opsForValue().set(userId.toString(), role.toString(), Duration.ofHours(1));
+    }
+
+
+    public String createAccessToken(Long userId, UserRole role) {
 
         return Jwts.builder()
-                .claim("user_id", userId)
+                .claim("userId", userId)
                 .claim("role", role)
-                .setExpiration(new Date(System.currentTimeMillis() + accessExpiration))
+                .expiration(new Date(System.currentTimeMillis() + accessExpiration))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }

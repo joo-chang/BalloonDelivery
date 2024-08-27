@@ -6,6 +6,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+      password: default
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -15,12 +21,6 @@ spring:
         format_sql: false
   profiles:
     include: private
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      username: default
-      password: default
 
 logging:
   level:
