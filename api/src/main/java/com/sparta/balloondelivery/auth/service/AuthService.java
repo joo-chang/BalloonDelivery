@@ -1,7 +1,7 @@
 package com.sparta.balloondelivery.auth.service;
 
 import com.sparta.balloondelivery.auth.dto.SignInReqDto;
-import com.sparta.balloondelivery.auth.dto.SignupReqDto;
+import com.sparta.balloondelivery.auth.dto.SignUpReqDto;
 import com.sparta.balloondelivery.data.entity.User;
 import com.sparta.balloondelivery.data.entity.UserRole;
 import com.sparta.balloondelivery.data.repository.AuthRepository;
@@ -12,7 +12,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,7 +46,7 @@ public class AuthService {
         this.redisTemplate = redisTemplate;
     }
 
-    public User signUp(SignupReqDto request) {
+    public User signUp(SignUpReqDto request) {
         Optional<User> checkUser = authRepository.findByEmail(request.getEmail());
         if (checkUser.isPresent()) {
             throw new BaseException(ErrorCode.EXIST_USER);

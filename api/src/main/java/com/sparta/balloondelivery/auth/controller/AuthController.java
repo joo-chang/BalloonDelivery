@@ -1,7 +1,7 @@
 package com.sparta.balloondelivery.auth.controller;
 
 import com.sparta.balloondelivery.auth.dto.SignInReqDto;
-import com.sparta.balloondelivery.auth.dto.SignupReqDto;
+import com.sparta.balloondelivery.auth.dto.SignUpReqDto;
 import com.sparta.balloondelivery.auth.service.AuthService;
 import com.sparta.balloondelivery.data.entity.User;
 import com.sparta.balloondelivery.util.ApiResponse;
@@ -26,7 +26,7 @@ public class AuthController {
 
 
     @PostMapping("/signUp")
-    public ApiResponse<?> signUp(@Valid @RequestBody SignupReqDto request) {
+    public ApiResponse<?> signUp(@Valid @RequestBody SignUpReqDto request) {
         User user = authService.signUp(request);
         return ApiResponse.success("success",user.getId(),"회원가입에 성공했습니다.");
     }
