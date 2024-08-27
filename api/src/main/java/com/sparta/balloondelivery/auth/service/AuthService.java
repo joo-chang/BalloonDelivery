@@ -29,20 +29,28 @@ public class AuthService {
     @Value("${jwt.expiration}")
     Long accessExpiration;
 
+    @Value("${ADMIN_TOKEN}")
+    String ADMIN_TOKEN;
+
     public AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public User signUp(SignupReqDto request) {
-        User user = new User(request.getEmail(), request.getUsername(), request.getPassword(), request.getRole());
-        Optional<User> checkUser = authRepository.findByEmail(user.getEmail());
+        Optional<User> checkUser = authRepository.findByEmail(request.getEmail());
         if (checkUser.isPresent()) {
             throw new BaseException(ErrorCode.EXIST_USER);
         }
+        if ((request.getRole()).equals(UserRole.MANAGER)) {
+            if (!ADMIN_TOKEN.equals(request.getAdminToken())) {
+                throw new BaseException(ErrorCode.INVALID_ADMIN_TOKEN);
+            }
+            request.setRole(UserRole.MANAGER);
+        }
 
-        log.info("User: {}", user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        User user = new User(request.getEmail(), request.getUsername(), request.getPassword(), request.getRole());
         return authRepository.save(user);
     }
 

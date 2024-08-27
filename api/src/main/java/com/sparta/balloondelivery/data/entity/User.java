@@ -22,11 +22,11 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    public User(String email, String username, String password, String role) {
+    public User(String email, String username, String password, UserRole role) {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.role = UserRole.valueOf(role);
+        this.role = role;
     }
 
 }

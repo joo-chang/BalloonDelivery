@@ -27,9 +27,8 @@ public class AuthController {
 
     @PostMapping("/signUp")
     public ApiResponse<?> signUp(@Valid @RequestBody SignupReqDto request) {
-
         User user = authService.signUp(request);
-        return ApiResponse.success("success",user.getId());
+        return ApiResponse.success("success",user.getId(),"회원가입에 성공했습니다.");
     }
 
     @PostMapping("/signIn")

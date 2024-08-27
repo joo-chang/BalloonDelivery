@@ -1,5 +1,6 @@
 package com.sparta.balloondelivery.auth.dto;
 
+import com.sparta.balloondelivery.data.entity.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -24,7 +25,6 @@ public class SignupReqDto {
     @Size(min = 8, max = 15, message = "password는 최소 8자 이상, 15자 이하이어야 합니다.")
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@!$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).+$", message = "password는 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자를 포함해야 합니다.")
     private String password;
-
-    @NotBlank
-    private String role;
+    private UserRole role;
+    private String adminToken = "";
 }
