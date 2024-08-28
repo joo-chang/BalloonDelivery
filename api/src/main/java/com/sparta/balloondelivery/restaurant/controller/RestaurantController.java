@@ -6,6 +6,7 @@ import com.sparta.balloondelivery.restaurant.dto.response.RestaurantCreateRespon
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantInfoResponse;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantPageInfoResponse;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantUpdateResponse;
+import com.sparta.balloondelivery.restaurant.service.RestaurantSearchService;
 import com.sparta.balloondelivery.restaurant.service.RestaurantService;
 import com.sparta.balloondelivery.util.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,16 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @RestController
 public class RestaurantController {
+
     private final RestaurantService restaurantService;
+    private final RestaurantSearchService restaurantSearchService;
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService) {
+    public RestaurantController(RestaurantService restaurantService, RestaurantSearchService restaurantSearchService) {
         this.restaurantService = restaurantService;
+        this.restaurantSearchService = restaurantSearchService;
     }
 
     /**
@@ -97,6 +102,21 @@ public class RestaurantController {
         return ApiResponse.success("", response, "가게 표시 상태가 변경되었습니다.");
     }
 
+
+    /**
+     * 가게 검색 API
+     */
+    @GetMapping("/search")
+    public ApiResponse<List<RestaurantInfoResponse>> searchRestaurants(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) UUID categoryId,
+            @RequestParam(required = false) UUID locationId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        List<RestaurantInfoResponse> response = restaurantSearchService.searchRestaurants(name, categoryId, locationId, page, size);
+        return ApiResponse.success("", response, "가게 검색 성공");
+    }
 
 }
 
