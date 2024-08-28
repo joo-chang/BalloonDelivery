@@ -1,8 +1,10 @@
 package com.sparta.balloondelivery.restaurant.controller;
 
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantCreateRequest;
+import com.sparta.balloondelivery.restaurant.dto.request.RestaurantUpdateRequest;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantCreateResponse;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantInfoResponse;
+import com.sparta.balloondelivery.restaurant.dto.response.RestaurantUpdateResponse;
 import com.sparta.balloondelivery.restaurant.service.RestaurantService;
 import com.sparta.balloondelivery.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ public class RestaurantController {
     }
 
     /**
-     * 가게 조회 API
+     * 가게 전체 조회 API
      */
     @GetMapping("/restaurants/{restaurant_id}")
     public ApiResponse<RestaurantInfoResponse> getRestaurantInfo(
@@ -41,6 +43,18 @@ public class RestaurantController {
     ) {
         RestaurantInfoResponse response = restaurantService.getRestaurantInfo(restaurantId);
         return ApiResponse.success("", response, "가게 정보 조회 성공");
+    }
+
+    /**
+     * 가게 정보 수정 API
+     */
+    @PutMapping("/restaurants/{restaurant_id}")
+    public ApiResponse<RestaurantUpdateResponse> updateRestaurant(
+            @PathVariable("restaurant_id") UUID restaurantId,
+            @RequestBody RestaurantUpdateRequest request
+    ) {
+        RestaurantUpdateResponse response = restaurantService.updateRestaurant(restaurantId, request);
+        return ApiResponse.success("", response, "가게 정보 수정 성공");
     }
 }
 
