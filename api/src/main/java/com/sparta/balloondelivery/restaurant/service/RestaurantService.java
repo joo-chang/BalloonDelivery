@@ -171,11 +171,11 @@ public class RestaurantService {
      * @param size
      * @return
      */
-    public RestaurantPageInfoResponse getMyRestaurants(String userId, int page, int size) {
-        UUID userUUID = UUID.fromString(userId);
+    public RestaurantPageInfoResponse getMyRestaurantsInfo(UUID userId, int page, int size) {
+//        UUID userUUID = UUID.fromString(userId);
 
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Restaurant> restaurantPage = restaurantRepository.findByUser_UserId(userUUID, pageRequest);
+        Page<Restaurant> restaurantPage = restaurantRepository.findByUser_UserId(userId, pageRequest);
 
         List<RestaurantInfoResponse> content = restaurantPage.getContent().stream()
                 .map(RestaurantInfoResponse::toDto)
@@ -189,6 +189,27 @@ public class RestaurantService {
                 restaurantPage.getTotalPages()
         );
     }
+
+    /**
+     * 가게 숨김/표시 설정 및 변경된 정보 반환
+     * @param restaurantId
+     * @return RestaurantInfoResponse
+     */
+    public RestaurantInfoResponse hideRestaurant(UUID restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
+
+        // 현재 visible 상태를 반전
+        boolean newVisibility = !restaurant.getVisible();
+        restaurant.setVisible(newVisibility);
+
+        // 변경된 레스토랑 정보를 저장
+        Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
+
+        // 변경된 레스토랑 정보를 반환
+        return RestaurantInfoResponse.toDto(updatedRestaurant);
+    }
+
 
 
 }

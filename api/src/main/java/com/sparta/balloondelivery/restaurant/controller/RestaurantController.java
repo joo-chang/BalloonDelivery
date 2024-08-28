@@ -30,7 +30,7 @@ public class RestaurantController {
      */
     @PostMapping("/restaurants")
     public ApiResponse<RestaurantCreateResponse> createRestaurant(
-            @RequestHeader("userId") UUID userId, // 유저 ID를 헤더에서 받아옴
+            @RequestHeader("userId") UUID userId,
             @RequestBody RestaurantCreateRequest request
     ) {
         log.info("Received userId: {}", userId);
@@ -74,16 +74,29 @@ public class RestaurantController {
     }
 
     @GetMapping("/restaurants/users")
-    public ApiResponse<RestaurantPageInfoResponse> getMyRestaurants(
-            @RequestHeader("userId") String userId,
+    public ApiResponse<RestaurantPageInfoResponse> getMyRestaurantsInfo(
+            @RequestHeader("userId") UUID userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         log.info("Received userId: {}", userId);
 
-        RestaurantPageInfoResponse response = restaurantService.getMyRestaurants(userId, page, size);
+        RestaurantPageInfoResponse response = restaurantService.getMyRestaurantsInfo(userId, page, size);
         return ApiResponse.success("", response, "내 가게 목록 조회 성공");
     }
+
+    /**
+     * 가게 숨김/표시 API
+     */
+    @PatchMapping("/restaurants/{restaurant_id}/hide")
+    public ApiResponse<RestaurantInfoResponse> hideRestaurant(
+            @PathVariable("restaurant_id") UUID restaurantId
+    ) {
+        // 서비스에서 상태 변경 및 정보 반환
+        RestaurantInfoResponse response = restaurantService.hideRestaurant(restaurantId);
+        return ApiResponse.success("", response, "가게 표시 상태가 변경되었습니다.");
+    }
+
 
 }
 

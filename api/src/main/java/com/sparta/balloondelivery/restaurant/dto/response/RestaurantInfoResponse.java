@@ -15,6 +15,7 @@ public class RestaurantInfoResponse {
     private String name;
     private String content;
     private String phone;
+    private Boolean visible;
     private UUID userId;
     private UUID categoryId;
     private UUID locationId;
@@ -26,6 +27,7 @@ public class RestaurantInfoResponse {
                 .name(restaurant.getName())
                 .content(restaurant.getContent())
                 .phone(restaurant.getPhone())
+                .visible(restaurant.getVisible())
                 .userId(restaurant.getUser().getUserId())
                 .categoryId(restaurant.getCategory().getCategoryId())
                 .locationId(restaurant.getLocation().getLocationId())
