@@ -12,6 +12,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,10 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class AuthService {
-    private static final String USER_ROLE =  "userRole::";
+    private static final String USER_ROLE =  "userRole";
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${jwt.secret}")
     String secretKey;
@@ -39,11 +38,10 @@ public class AuthService {
     @Value("${ADMIN_TOKEN}")
     String ADMIN_TOKEN;
 
-    public AuthService(AuthRepository authRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, RedisTemplate<String, String> redisTemplate) {
+    public AuthService(AuthRepository authRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.authRepository = authRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.redisTemplate = redisTemplate;
     }
 
     public User signUp(SignUpReqDto request) {
@@ -70,9 +68,6 @@ public class AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BaseException(ErrorCode.INVALID_CREDENTIALS);
         }
-        UserRole userRoles = userRepository.findRoleById(user.getId());
-        redisTemplate.opsForValue().set(USER_ROLE + user.getId(), String.valueOf(userRoles), Duration.ofHours(1));
-
         return createAccessToken(user.getId().toString());
     }
 
@@ -85,4 +80,13 @@ public class AuthService {
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
+
+    @Cacheable(cacheNames = USER_ROLE, key = "#userId")
+    public UserRole hasPermission(Long userId) {
+        return userRepository.findRoleById(userId);
+    }
+
+
+
+
 }
