@@ -30,10 +30,7 @@ public class UserService {
         this.authService = authService;
     }
 
-    public UserResDto getUser(String userId, Long targetUserId) {
-        if (!userId.equals(targetUserId.toString()) && !authService.hasPermission(Long.parseLong(userId)).equals(UserRole.MANAGER)) {
-            throw new BaseException(ErrorCode.NO_PERMISSION);
-        }
+    public UserResDto getUser(Long targetUserId) {
         UserResDto userResDto = new UserResDto();
         userRepository.findById(targetUserId).ifPresentOrElse(
                 user -> {
@@ -71,10 +68,7 @@ public class UserService {
     }
 
     public Page<UserResDto> getAllUsers(Long userId, Pageable pageable) {
-        UserRole userRole = authService.hasPermission(userId);
-        if (!userRole.equals(UserRole.MANAGER)) {
-            throw new BaseException(ErrorCode.NO_PERMISSION);
-        }
+
 
         Page<User> usersPage = userRepository.findAll(pageable);
 
@@ -89,12 +83,7 @@ public class UserService {
 
 
     @CacheEvict(cacheNames = USER_ROLE, key = "#targetUserId")
-    public void updateUserRole(String userId, Long targetUserId, RoleUpdateReqDto role) {
-        UserRole userRole = authService.hasPermission(Long.parseLong(userId));
-        if (!userRole.equals(UserRole.MANAGER)) {
-            throw new BaseException(ErrorCode.NO_PERMISSION);
-        }
-
+    public void updateUserRole(Long targetUserId, RoleUpdateReqDto role) {
         User user = userRepository.findById(targetUserId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER));
         user.setRole(role.getRole());
