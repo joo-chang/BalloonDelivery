@@ -13,11 +13,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 
@@ -85,8 +83,5 @@ public class AuthService {
     public UserRole hasPermission(Long userId) {
         return userRepository.findRoleById(userId);
     }
-
-
-
 
 }
