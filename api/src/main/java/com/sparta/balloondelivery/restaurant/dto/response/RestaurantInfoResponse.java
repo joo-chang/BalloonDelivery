@@ -2,20 +2,24 @@ package com.sparta.balloondelivery.restaurant.dto.response;
 
 import com.sparta.balloondelivery.data.entity.Restaurant;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 @Builder
-public record RestaurantInfoResponse(
-        UUID restaurantId,
-        String name,
-        String content,
-        String phone,
-        UUID userId,
-        UUID categoryId,
-        UUID locationId,
-        UUID addressId
-) {
+public class RestaurantInfoResponse {
+    private UUID restaurantId;
+    private String name;
+    private String content;
+    private String phone;
+    private UUID userId;
+    private UUID categoryId;
+    private UUID locationId;
+    private UUID addressId;
+
     public static RestaurantInfoResponse toDto(Restaurant restaurant) {
         return RestaurantInfoResponse.builder()
                 .restaurantId(restaurant.getRestaurantId())
