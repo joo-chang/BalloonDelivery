@@ -1,5 +1,6 @@
 package com.sparta.balloondelivery.data.entity;
 
+import com.sparta.balloondelivery.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +14,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payment {
+public class Payment extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "payment_id")
     private UUID id;
 
@@ -25,8 +27,15 @@ public class Payment {
     private Long price;
     private String card;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
-    private enum PaymentStatus {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public enum PaymentStatus {
         // 결제 요청, 결제 완료, 결제 실패, 결제 취소 요청, 결제 취소 완료)
         REQUESTED, COMPLETED, FAILED, CANCEL_REQUESTED, CANCELLED
     }

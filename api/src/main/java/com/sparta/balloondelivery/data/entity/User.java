@@ -1,8 +1,7 @@
 package com.sparta.balloondelivery.data.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.sparta.balloondelivery.util.BaseEntity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends BaseEntity {
     @Id
     @Column(name = "user_id")
     private Long id;
@@ -21,5 +20,6 @@ public class User {
     private String email;
     private String nickname;
     private String password;
-    private Enum<UserRole> role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 }

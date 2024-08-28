@@ -1,6 +1,7 @@
 package com.sparta.balloondelivery.data.entity;
 
 
+import com.sparta.balloondelivery.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,8 +15,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Restaurant {
+public class Restaurant extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "restaurant_id")
     private UUID  id;
     private String name;
