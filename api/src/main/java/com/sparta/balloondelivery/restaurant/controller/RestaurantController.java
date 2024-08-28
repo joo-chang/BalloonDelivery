@@ -4,6 +4,7 @@ import com.sparta.balloondelivery.restaurant.dto.request.RestaurantCreateRequest
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantUpdateRequest;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantCreateResponse;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantInfoResponse;
+import com.sparta.balloondelivery.restaurant.dto.response.RestaurantPageInfoResponse;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantUpdateResponse;
 import com.sparta.balloondelivery.restaurant.service.RestaurantService;
 import com.sparta.balloondelivery.util.ApiResponse;
@@ -55,6 +56,18 @@ public class RestaurantController {
     ) {
         RestaurantUpdateResponse response = restaurantService.updateRestaurant(restaurantId, request);
         return ApiResponse.success("", response, "가게 정보 수정 성공");
+    }
+
+    /**
+     * 가게 전체 조회 API
+     */
+    @GetMapping("/restaurants")
+    public ApiResponse<RestaurantPageInfoResponse> getAllRestaurantsInfo(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        RestaurantPageInfoResponse response = restaurantService.getAllRestaurantsInfo(page, size);
+        return ApiResponse.success("", response, "가게 목록 조회 성공");
     }
 }
 

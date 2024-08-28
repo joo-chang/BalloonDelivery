@@ -6,11 +6,16 @@ import com.sparta.balloondelivery.restaurant.dto.request.RestaurantCreateRequest
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantUpdateRequest;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantCreateResponse;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantInfoResponse;
+import com.sparta.balloondelivery.restaurant.dto.response.RestaurantPageInfoResponse;
 import com.sparta.balloondelivery.restaurant.dto.response.RestaurantUpdateResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -134,5 +139,22 @@ public class RestaurantService {
                 .locationId(updatedRestaurant.getLocation().getLocationId())
                 .addressId(updatedRestaurant.getAddress().getAddressId())
                 .build();
+    }
+
+    public RestaurantPageInfoResponse getAllRestaurantsInfo(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Restaurant> restaurantPage = restaurantRepository.findAll(pageRequest);
+
+        List<RestaurantInfoResponse> content = restaurantPage.getContent().stream()
+                .map(RestaurantInfoResponse::toDto)
+                .collect(Collectors.toList());
+
+        return new RestaurantPageInfoResponse(
+                content,
+                page,
+                size,
+                restaurantPage.getTotalElements(),
+                restaurantPage.getTotalPages()
+        );
     }
 }
