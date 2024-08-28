@@ -147,7 +147,7 @@ public class RestaurantService {
      * @param size
      * @return
      */
-    public RestaurantPageInfoResponse getAllRestaurantsInfo(int page, int size) {
+    public RestaurantPageInfoResponse getAllRestaurantInfo(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Restaurant> restaurantPage = restaurantRepository.findAll(pageRequest);
 
@@ -171,7 +171,7 @@ public class RestaurantService {
      * @param size
      * @return
      */
-    public RestaurantPageInfoResponse getMyRestaurantsInfo(UUID userId, int page, int size) {
+    public RestaurantPageInfoResponse getMyRestaurantInfo(UUID userId, int page, int size) {
 //        UUID userUUID = UUID.fromString(userId);
 
         PageRequest pageRequest = PageRequest.of(page, size);

@@ -65,23 +65,23 @@ public class RestaurantController {
      * 가게 전체 조회 API
      */
     @GetMapping("/restaurants")
-    public ApiResponse<RestaurantPageInfoResponse> getAllRestaurantsInfo(
+    public ApiResponse<RestaurantPageInfoResponse> getAllRestaurantInfo(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        RestaurantPageInfoResponse response = restaurantService.getAllRestaurantsInfo(page, size);
+        RestaurantPageInfoResponse response = restaurantService.getAllRestaurantInfo(page, size);
         return ApiResponse.success("", response, "가게 목록 조회 성공");
     }
 
     @GetMapping("/restaurants/users")
-    public ApiResponse<RestaurantPageInfoResponse> getMyRestaurantsInfo(
+    public ApiResponse<RestaurantPageInfoResponse> getMyRestaurantInfo(
             @RequestHeader("userId") UUID userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         log.info("Received userId: {}", userId);
 
-        RestaurantPageInfoResponse response = restaurantService.getMyRestaurantsInfo(userId, page, size);
+        RestaurantPageInfoResponse response = restaurantService.getMyRestaurantInfo(userId, page, size);
         return ApiResponse.success("", response, "내 가게 목록 조회 성공");
     }
 
