@@ -51,19 +51,20 @@ public class RestaurantService {
         restaurant.setUser(user);
         restaurant.setCategory(category);
         restaurant.setLocation(location);
+        restaurant.setAddress(savedAddress);  // 반드시 Address 필드를 설정
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return new RestaurantCreateResponse(
-                savedRestaurant.getRestaurantId(),
-                savedRestaurant.getName(),
-                savedRestaurant.getContent(),
-                savedRestaurant.getPhone(),
-                savedRestaurant.getUser().getUserId(),
-                savedRestaurant.getCategory().getCategoryId(),
-                savedRestaurant.getLocation().getLocationId(),
-                savedAddress.getAddressId()
-        );
+        return RestaurantCreateResponse.builder()
+                .restaurantId(savedRestaurant.getRestaurantId())
+                .name(savedRestaurant.getName())
+                .content(savedRestaurant.getContent())
+                .phone(savedRestaurant.getPhone())
+                .userId(savedRestaurant.getUser().getUserId())
+                .categoryId(savedRestaurant.getCategory().getCategoryId())
+                .locationId(savedRestaurant.getLocation().getLocationId())
+                .addressId(savedRestaurant.getAddress().getAddressId())
+                .build();
     }
 
     /**
