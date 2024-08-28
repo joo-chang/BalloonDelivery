@@ -19,8 +19,8 @@ public enum ErrorCode {
     INVALID_CREDENTIALS("아이디나 비밀번호가 올바르지 않습니다."),
     INVALID_ROLE("유효하지 않은 권한입니다."),
     INVALID_ADMIN_TOKEN("관리자 암호가 올바르지 않습니다."),
-    // 존재하지 않는 사용자
     NOT_EXIST_USER("존재하지 않는 사용자입니다."),
+    NO_PERMISSION("권한이 없습니다."),
     ;
 
 

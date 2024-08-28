@@ -51,6 +51,8 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
         }
     }
 
+    //auth service로 user 권한을 물어보는 코드 추가
+
     private String extractToken(ServerWebExchange exchange) {
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

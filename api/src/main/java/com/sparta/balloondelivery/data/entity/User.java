@@ -1,7 +1,9 @@
 package com.sparta.balloondelivery.data.entity;
 
+import com.sparta.balloondelivery.user.dto.UserReqDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Data
 @AllArgsConstructor
@@ -29,5 +31,4 @@ public class User {
         this.password = password;
         this.role = role;
     }
-
 }
