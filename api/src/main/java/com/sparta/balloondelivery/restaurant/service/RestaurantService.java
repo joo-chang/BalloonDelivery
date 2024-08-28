@@ -75,7 +75,7 @@ public class RestaurantService {
     }
 
     /**
-     * 가게 전체 조회
+     * 가게 조회
      * @param restaurantId
      * @return
      */
@@ -141,6 +141,12 @@ public class RestaurantService {
                 .build();
     }
 
+    /**
+     * 가게 전체 조회
+     * @param page
+     * @param size
+     * @return
+     */
     public RestaurantPageInfoResponse getAllRestaurantsInfo(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Restaurant> restaurantPage = restaurantRepository.findAll(pageRequest);
@@ -157,4 +163,32 @@ public class RestaurantService {
                 restaurantPage.getTotalPages()
         );
     }
+
+    /**
+     * 내 가게 조회
+     * @param userId
+     * @param page
+     * @param size
+     * @return
+     */
+    public RestaurantPageInfoResponse getMyRestaurants(String userId, int page, int size) {
+        UUID userUUID = UUID.fromString(userId);
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Restaurant> restaurantPage = restaurantRepository.findByUser_UserId(userUUID, pageRequest);
+
+        List<RestaurantInfoResponse> content = restaurantPage.getContent().stream()
+                .map(RestaurantInfoResponse::toDto)
+                .collect(Collectors.toList());
+
+        return new RestaurantPageInfoResponse(
+                content,
+                page,
+                size,
+                restaurantPage.getTotalElements(),
+                restaurantPage.getTotalPages()
+        );
+    }
+
+
 }
