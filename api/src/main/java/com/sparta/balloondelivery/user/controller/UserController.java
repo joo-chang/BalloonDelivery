@@ -76,6 +76,11 @@ public class UserController {
         return ApiResponse.success("OK", userId, SuccessCode.UPDATE_SUCCESS.getSuccessMsg());
     }
 
+    @GetMapping("/address")
+    public ApiResponse<?> getAddress(@RequestHeader(value = "X-User-Id", required = true) String userId) {
+        return ApiResponse.success("OK", userService.getAddress(Long.parseLong(userId)), SuccessCode.SUCCESS.getSuccessMsg());
+    }
+
     @PostMapping("/address")
     public ApiResponse<?> addAddress(@RequestHeader(value = "X-User-Id", required = true) String userId,
                                      @Valid @RequestBody AddressReqDto addressReqDto) {

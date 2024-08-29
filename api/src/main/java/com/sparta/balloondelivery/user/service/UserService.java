@@ -147,4 +147,11 @@ public class UserService {
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }
     }
+
+    public Address getAddress(long userId) {
+        UUID addressId = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER)).getAddressId();
+        return addressRepository.findById(addressId)
+                .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
+    }
 }
