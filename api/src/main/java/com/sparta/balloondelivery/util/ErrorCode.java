@@ -22,7 +22,8 @@ public enum ErrorCode {
     NOT_EXIST_USER("존재하지 않는 사용자입니다."),
     NO_PERMISSION("권한이 없습니다."),
     EXIST_ADDRESS("이미 주소가 존재합니다."),
-    JWT_NOT_FOUND("토큰이 존재하지 않습니다.")
+    JWT_NOT_FOUND("토큰이 존재하지 않습니다."),
+    ADDRESS_LIMIT("배송지는 최대 10개까지만 등록 가능합니다."),
     ;
 
 

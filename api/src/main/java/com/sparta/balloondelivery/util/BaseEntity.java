@@ -61,4 +61,13 @@ public class BaseEntity implements Serializable {
         return this.deletedYn;
     }
 
+    public void setUpdatedBy(String userName) {
+        this.updatedBy = userName;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void setCreatedBy(String username) {
+        this.createdBy = username;
+        this.createdAt = LocalDateTime.now();
+    }
 }

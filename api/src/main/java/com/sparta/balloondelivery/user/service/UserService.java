@@ -1,9 +1,7 @@
 package com.sparta.balloondelivery.user.service;
 
-import com.sparta.balloondelivery.auth.service.AuthService;
 import com.sparta.balloondelivery.data.entity.Address;
 import com.sparta.balloondelivery.data.entity.User;
-import com.sparta.balloondelivery.data.entity.UserRole;
 import com.sparta.balloondelivery.data.repository.AddressRepository;
 import com.sparta.balloondelivery.data.repository.UserRepository;
 import com.sparta.balloondelivery.exception.BaseException;
@@ -61,8 +59,6 @@ public class UserService {
         if (userReqDto.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(userReqDto.getPassword()));
         }
-
-        // 사용자 정보 저장
         userRepository.save(user);
     }
 
@@ -70,13 +66,11 @@ public class UserService {
     public void deleteUser(String userId) {
         User user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER));
-        user.setDeletedYN(true);
+        user.setDeletedYnTrue(user.getUsername());
         userRepository.save(user);
     }
 
     public Page<UserResDto> getAllUsers(Long userId, Pageable pageable) {
-
-
         Page<User> usersPage = userRepository.findAll(pageable);
 
         return usersPage.map(user -> {
@@ -99,21 +93,14 @@ public class UserService {
 
 
     @Transactional
-    public void addAddress(long userId, AddressReqDto addressReqDto) {
+    public void addAddress(long userId, AddressReqDto addressReqDto, String userName) {
         try {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER));
-
-            if (user.getAddressId() != null) {
-                throw new BaseException(ErrorCode.EXIST_ADDRESS);
+            if (addressRepository.countByUserId(userId) >= 10) {
+                throw new BaseException(ErrorCode.ADDRESS_LIMIT);
             }
-
-            Address address = new Address(addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
+            Address address = new Address(userId, addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
+            address.setCreatedBy(userName);
             addressRepository.save(address);
-
-            user.setAddressId(address.getId());
-            userRepository.save(user);
-
         } catch (BaseException e) {
             throw e;
         } catch (Exception e) {
@@ -122,36 +109,39 @@ public class UserService {
     }
 
 
-    public void updateAddress(long userId, AddressReqDto addressReqDto) {
+    public void updateAddress(long userId, UUID addressId, AddressReqDto addressReqDto, String userName) {
         try {
-            UUID addressId = userRepository.findById(userId)
-                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER)).getAddressId();
-
             Address address = addressRepository.findById(addressId)
                     .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
             address.setAddress(addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
+            address.setUpdatedBy(userName);
             addressRepository.save(address);
         } catch (Exception e) {
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }
     }
 
-    public void deleteAddress(long userId) {
+    public void deleteAddress(long userId, UUID addressId, String userName) {
         try {
-            UUID addressId = userRepository.findById(userId)
-                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER)).getAddressId();
             Address address = addressRepository.findById(addressId)
                     .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
-            addressRepository.delete(address);
+            address.setDeletedYnTrue(userName);
+            addressRepository.save(address);
         } catch (Exception e) {
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }
     }
 
-    public Address getAddress(long userId) {
-        UUID addressId = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER)).getAddressId();
-        return addressRepository.findById(addressId)
-                .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
+    public Page<Address> getAddress(long userId, Pageable pageable) {
+        return addressRepository.findByUserId(userId, pageable);
+    }
+
+    public Address getAddressById(long userId, UUID addressId) {
+        try {
+            return addressRepository.findById(addressId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
     }
 }
