@@ -17,7 +17,6 @@ public class RestaurantCreateResponse {
     private UUID locationId;
     private UUID addressId;
 
-    // All-args constructor (Lombok's @Builder includes this)
     public RestaurantCreateResponse(UUID restaurantId, String name, String content, String phone, UUID userId, UUID categoryId, UUID locationId, UUID addressId) {
         this.restaurantId = restaurantId;
         this.name = name;

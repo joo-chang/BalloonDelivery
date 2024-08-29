@@ -1,5 +1,6 @@
 package com.sparta.balloondelivery.data.repository;
 
+import com.sparta.balloondelivery.data.entity.Menu;
 import com.sparta.balloondelivery.data.entity.Restaurant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
