@@ -1,7 +1,6 @@
 package com.sparta.balloondelivery.menu.dto.response;
 
 import com.sparta.balloondelivery.data.entity.Menu;
-import com.sparta.balloondelivery.data.entity.Restaurant;
 import lombok.Builder;
 import lombok.Getter;
 

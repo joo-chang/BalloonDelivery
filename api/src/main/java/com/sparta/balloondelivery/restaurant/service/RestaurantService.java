@@ -29,6 +29,7 @@ public class RestaurantService {
 
     /**
      * 가게 등록
+     *
      * @param userId
      * @param request
      * @return
@@ -58,7 +59,7 @@ public class RestaurantService {
         restaurant.setUser(user);
         restaurant.setCategory(category);
         restaurant.setLocation(location);
-        restaurant.setAddress(savedAddress);  // 반드시 Address 필드를 설정
+        restaurant.setAddress(savedAddress);
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
@@ -76,6 +77,7 @@ public class RestaurantService {
 
     /**
      * 가게 조회
+     *
      * @param restaurantId
      * @return
      */
@@ -88,6 +90,7 @@ public class RestaurantService {
 
     /**
      * 가게 정보 수정
+     *
      * @param restaurantId
      * @param request
      * @return
@@ -143,6 +146,7 @@ public class RestaurantService {
 
     /**
      * 가게 전체 조회
+     *
      * @param page
      * @param size
      * @return
@@ -166,6 +170,7 @@ public class RestaurantService {
 
     /**
      * 내 가게 조회
+     *
      * @param userId
      * @param page
      * @param size
@@ -192,6 +197,7 @@ public class RestaurantService {
 
     /**
      * 가게 숨김/표시 설정 및 변경된 정보 반환
+     *
      * @param restaurantId
      * @return RestaurantInfoResponse
      */
@@ -209,7 +215,6 @@ public class RestaurantService {
         // 변경된 레스토랑 정보를 반환
         return RestaurantInfoResponse.toDto(updatedRestaurant);
     }
-
 
 
 }

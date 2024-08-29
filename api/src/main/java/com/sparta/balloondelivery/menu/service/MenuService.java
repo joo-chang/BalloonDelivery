@@ -29,11 +29,13 @@ public class MenuService {
 
     /**
      * 메뉴 생성
+     *
      * @param request
      * @return
      */
     @Transactional
     public MenuCreateResponse createMenu(MenuCreateRequest request) {
+
         // 메뉴를 생성하기 위해 필요한 레스토랑을 가져옴
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
@@ -56,6 +58,7 @@ public class MenuService {
 
     /**
      * 메뉴 수정
+     *
      * @param menuId
      * @param request
      * @return
@@ -78,6 +81,7 @@ public class MenuService {
 
     /**
      * 메뉴 단건 조회
+     *
      * @param menuId
      * @return
      */
@@ -91,6 +95,7 @@ public class MenuService {
 
     /**
      * 메뉴 전체 조회 (페이지네이션 포함)
+     *
      * @param page
      * @param size
      * @return
@@ -107,6 +112,7 @@ public class MenuService {
 
     /**
      * 메뉴 상태 변경
+     *
      * @param menuId
      * @param status
      * @return
@@ -116,16 +122,12 @@ public class MenuService {
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid menu ID"));
 
-        // 메뉴 상태 변경
         menu.setVisiable(status);
 
         Menu updatedMenu = menuRepository.save(menu);
 
         return MenuUpdateResponse.toDto(updatedMenu);
     }
-
-
-
 
 
 }

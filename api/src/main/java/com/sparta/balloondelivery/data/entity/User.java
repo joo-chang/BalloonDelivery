@@ -1,10 +1,10 @@
 package com.sparta.balloondelivery.data.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 

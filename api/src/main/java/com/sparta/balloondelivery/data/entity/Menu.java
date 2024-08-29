@@ -1,14 +1,15 @@
 package com.sparta.balloondelivery.data.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "p_menus")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Menu {

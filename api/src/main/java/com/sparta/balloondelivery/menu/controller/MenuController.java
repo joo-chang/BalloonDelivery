@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/menus")
@@ -60,7 +61,7 @@ public class MenuController {
     }
 
     /**
-     * 메뉴 전체 조회 API (페이지네이션 포함)
+     * 메뉴 전체 조회 API
      */
     @GetMapping
     public ApiResponse<List<MenuInfoResponse>> getAllMenus(
@@ -73,9 +74,6 @@ public class MenuController {
 
     /**
      * 메뉴 상태 변경 API
-     * @param menuId
-     * @param status
-     * @return
      */
     @PatchMapping("/{menu_id}/status")
     public ApiResponse<MenuUpdateResponse> updateMenuStatus(
@@ -85,7 +83,6 @@ public class MenuController {
         MenuUpdateResponse response = menuService.updateMenuStatus(menuId, status);
         return ApiResponse.success("", response, "메뉴 상태 변경 성공");
     }
-
 
 
 }
