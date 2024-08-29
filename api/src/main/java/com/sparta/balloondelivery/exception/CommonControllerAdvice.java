@@ -1,18 +1,26 @@
 package com.sparta.balloondelivery.exception;
 
 import com.sparta.balloondelivery.util.ApiResponse;
+import com.sparta.balloondelivery.util.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.format.DateTimeParseException;
 
 @Slf4j
 @RestControllerAdvice
 public class CommonControllerAdvice {
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return ApiResponse.fail(ErrorCode.INVALID_PARAMETER);
+    }
 
     /**
      * http status: 500 AND result: FAIL
