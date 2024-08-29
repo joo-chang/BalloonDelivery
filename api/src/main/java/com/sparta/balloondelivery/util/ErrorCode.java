@@ -13,8 +13,8 @@ public enum ErrorCode {
     AUTHENTICATION_FAIL("인증 정보가 올바르지 않습니다."),
     AUTHORIZATION_FAIL("권한이 없습니다."),
     INCORRECT_USER("사용자 정보가 올바르지 않습니다."),
+    USER_NOT_FOUND("사용자 정보가 존재하지 않습니다."),
     DATA_LENGTH_OVER_EXCEPTION("데이터 길이가 초과되었습니다."),
-    JWT_NOTFOUND("토큰이 존재하지 않습니다."),
     EXIST_USER("이미 존재하는 사용자입니다."),
     INVALID_CREDENTIALS("아이디나 비밀번호가 올바르지 않습니다."),
     INVALID_ROLE("유효하지 않은 권한입니다."),
@@ -22,6 +22,7 @@ public enum ErrorCode {
     NOT_EXIST_USER("존재하지 않는 사용자입니다."),
     NO_PERMISSION("권한이 없습니다."),
     EXIST_ADDRESS("이미 주소가 존재합니다."),
+    JWT_NOT_FOUND("토큰이 존재하지 않습니다.")
     ;
 
 
