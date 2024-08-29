@@ -30,4 +30,10 @@ public class Address {
         this.address2 = address2;
         this.address3 = address3;
     }
+
+    public void setAddress(String address1, String address2, String address3) {
+        this.address1 = address1;
+        this.address2 = address2;
+        this.address3 = address3;
+    }
 }

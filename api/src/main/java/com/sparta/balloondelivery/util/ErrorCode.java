@@ -21,6 +21,7 @@ public enum ErrorCode {
     INVALID_ADMIN_TOKEN("관리자 암호가 올바르지 않습니다."),
     NOT_EXIST_USER("존재하지 않는 사용자입니다."),
     NO_PERMISSION("권한이 없습니다."),
+    EXIST_ADDRESS("이미 주소가 존재합니다."),
     ;
 
 

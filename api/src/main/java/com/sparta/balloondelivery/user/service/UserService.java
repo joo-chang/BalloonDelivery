@@ -18,6 +18,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,7 +29,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final String USER_ROLE =  "userRole";
+    private static final String USER_ROLE = "userRole";
+
     public UserService(UserRepository userRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
@@ -94,14 +98,51 @@ public class UserService {
     }
 
 
+    @Transactional
     public void addAddress(long userId, AddressReqDto addressReqDto) {
-        try{
+        try {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER));
+
+            if (user.getAddressId() != null) {
+                throw new BaseException(ErrorCode.EXIST_ADDRESS);
+            }
+
             Address address = new Address(addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
+            addressRepository.save(address);
+
             user.setAddressId(address.getId());
             userRepository.save(user);
+
+        } catch (BaseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
+    }
+
+
+    public void updateAddress(long userId, AddressReqDto addressReqDto) {
+        try {
+            UUID addressId = userRepository.findById(userId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER)).getAddressId();
+
+            Address address = addressRepository.findById(addressId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
+            address.setAddress(addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
             addressRepository.save(address);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
+    }
+
+    public void deleteAddress(long userId) {
+        try {
+            UUID addressId = userRepository.findById(userId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER)).getAddressId();
+            Address address = addressRepository.findById(addressId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
+            addressRepository.delete(address);
         } catch (Exception e) {
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }

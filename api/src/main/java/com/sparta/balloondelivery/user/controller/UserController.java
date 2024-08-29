@@ -83,4 +83,17 @@ public class UserController {
         return ApiResponse.success("OK", userId, SuccessCode.SUCCESS.getSuccessMsg());
     }
 
+    @PutMapping("/address")
+    public ApiResponse<?> updateAddress(@RequestHeader(value = "X-User-Id", required = true) String userId,
+                                        @Valid @RequestBody AddressReqDto addressReqDto) {
+        userService.updateAddress(Long.parseLong(userId), addressReqDto);
+        return ApiResponse.success("OK", userId, SuccessCode.SUCCESS.getSuccessMsg());
+    }
+
+    @DeleteMapping("/address")
+    public ApiResponse<?> deleteAddress(@RequestHeader(value = "X-User-Id", required = true) String userId) {
+        userService.deleteAddress(Long.parseLong(userId));
+        return ApiResponse.success("OK", userId, SuccessCode.SUCCESS.getSuccessMsg());
+    }
+
 }
