@@ -56,8 +56,10 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
                     .build().parseSignedClaims(token);
             Claims claims = claimsJws.getPayload();
             String userId = claims.get("user_id").toString();
+            String username = claims.get("username").toString();
             exchange.getRequest().mutate()
                     .header("X-User-Id", userId)
+                    .header("X-User-Name",username)
                     .header("X-User-Role", authClient.getPermission(Long.valueOf(userId)))
                     .build();
             return true;

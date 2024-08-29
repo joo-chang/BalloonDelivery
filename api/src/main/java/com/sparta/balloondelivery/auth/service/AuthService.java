@@ -66,14 +66,15 @@ public class AuthService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BaseException(ErrorCode.INVALID_CREDENTIALS);
         }
-        return createAccessToken(user.getId().toString());
+        return createAccessToken(user.getId().toString(), user.getUsername().toString());
     }
 
 
 
-    public String createAccessToken(String userId) {
+    public String createAccessToken(String userId, String username) {
         return Jwts.builder()
                 .claim("user_id", userId)
+                .claim("username", username)
                 .expiration(new Date(System.currentTimeMillis() + accessExpiration))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
