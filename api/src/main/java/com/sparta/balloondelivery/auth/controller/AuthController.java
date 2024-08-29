@@ -27,13 +27,13 @@ public class AuthController {
     @PostMapping("/signUp")
     public ApiResponse<?> signUp(@Valid @RequestBody SignUpReqDto request) {
         User user = authService.signUp(request);
-        return ApiResponse.success("success", user.getId(), "회원가입에 성공했습니다.");
+        return ApiResponse.success("OK", user.getId(), SuccessCode.REGISTER_SUCCESS.getSuccessMsg());
     }
 
     @PostMapping("/signIn")
     public ApiResponse<?> signIn(@RequestBody SignInReqDto request) {
         String accessToken = authService.signIn(request);
-        return ApiResponse.success("success", accessToken);
+        return ApiResponse.success("OK", accessToken, SuccessCode.LOGIN_SUCCESS.getSuccessMsg());
     }
 
     @GetMapping("/getPermission/{userId}")
