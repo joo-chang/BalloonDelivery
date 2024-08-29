@@ -41,7 +41,7 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
         String token = extractToken(exchange);
         if (token == null || !validateToken(token, exchange)) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+            return onError(exchange, "유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED);
         }
 
 
@@ -66,6 +66,15 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private Mono<Void> onError(ServerWebExchange exchange, String errorMsg, HttpStatus status) {
+        exchange.getResponse().setStatusCode(status);
+        exchange.getResponse().getHeaders().add("Content-Type", "application/json");
+        String body = "{\"error\": \"" + errorMsg + "\"}";
+        return exchange.getResponse().writeWith(Mono.just(exchange.getResponse()
+                .bufferFactory()
+                .wrap(body.getBytes())));
     }
 
     private String extractToken(ServerWebExchange exchange) {
