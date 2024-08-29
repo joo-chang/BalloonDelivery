@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,9 +23,8 @@ public class User {
     private UserRole role;
     private boolean deletedYN;
 
-    @OneToOne
     @JoinColumn(name = "address_id")
-    private Address address;
+    private UUID addressId;
 
     public User(String email, String username, String password, UserRole role) {
         this.email = email;
@@ -31,4 +32,5 @@ public class User {
         this.password = password;
         this.role = role;
     }
+
 }

@@ -4,6 +4,7 @@ import com.sparta.balloondelivery.auth.service.AuthService;
 import com.sparta.balloondelivery.data.entity.Address;
 import com.sparta.balloondelivery.data.entity.User;
 import com.sparta.balloondelivery.data.entity.UserRole;
+import com.sparta.balloondelivery.data.repository.AddressRepository;
 import com.sparta.balloondelivery.data.repository.UserRepository;
 import com.sparta.balloondelivery.exception.BaseException;
 import com.sparta.balloondelivery.user.dto.AddressReqDto;
@@ -23,10 +24,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
     private static final String USER_ROLE =  "userRole";
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, AddressRepository addressRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -91,4 +94,16 @@ public class UserService {
     }
 
 
+    public void addAddress(long userId, AddressReqDto addressReqDto) {
+        try{
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.NOT_EXIST_USER));
+            Address address = new Address(addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
+            user.setAddressId(address.getId());
+            userRepository.save(user);
+            addressRepository.save(address);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
+    }
 }
