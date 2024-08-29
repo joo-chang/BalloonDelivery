@@ -1,34 +1,51 @@
 package com.sparta.balloondelivery.data.entity;
 
-
-import com.sparta.balloondelivery.util.BaseEntity;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
-@Entity(name = "p_restaurants")
-@Getter
-@Builder
+@Entity
+@Table(name = "p_restaurants")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Restaurant extends BaseEntity {
+public class Restaurant {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "restaurant_id")
-    private UUID  id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "restaurant_id", updatable = false, nullable = false)
+    private UUID restaurantId;
+
+    @Column(nullable = false, length = 255)
     private String name;
+
+    @Column(length = 255)
     private String content;
+
+    @Column(length = 100)
     private String phone;
 
-    @OneToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @Column(nullable = false)
+    private Boolean visible = true;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable = false)
+    private Location location;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
 }
