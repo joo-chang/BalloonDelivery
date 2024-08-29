@@ -6,11 +6,13 @@ import com.sparta.balloondelivery.data.repository.*;
 import com.sparta.balloondelivery.exception.BaseException;
 import com.sparta.balloondelivery.order.dto.OrderItemDto;
 import com.sparta.balloondelivery.order.dto.OrderRequest;
+import com.sparta.balloondelivery.order.dto.OrderResponse;
 import com.sparta.balloondelivery.util.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,10 +26,10 @@ public class OrderService {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    public UUID createOrder(OrderRequest.CreateOrder createOrder) {
+    public UUID createOrder(String userId, OrderRequest.CreateOrder createOrder) {
 
-        // TODO: 유저 정보 체크, 가게 정보 체크
-        User user = userRepository.findById(createOrder.getUserId())
+        // 유저 정보 체크, 가게 정보 체크
+        User user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findById(createOrder.getRestaurantId())
                 .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
@@ -55,8 +57,7 @@ public class OrderService {
 
         orderRepository.save(order);
 
-        //TODO : order 생성하면서 결제 요청. 결제 성공여부 API 만들어서 결제 내역 받기?
-        // 결제 정보 넘겨서 paymentService에서 생성해야되나?
+        // 결제 요청까지 바로 생성
         Payment payment = Payment.builder()
                 .order(order)
                 .user(user)
@@ -66,6 +67,17 @@ public class OrderService {
 
         paymentRepository.save(payment);
 
-        return null;
+        return order.getId();
+    }
+
+    public List<OrderResponse.MyOrderList> getMyOrders(String userId) {
+        User user = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        List<Order> orders = orderRepository.findByUserId(user.getId());
+
+        return orders.stream()
+                .map(OrderResponse.MyOrderList::toDto)
+                .toList();
     }
 }

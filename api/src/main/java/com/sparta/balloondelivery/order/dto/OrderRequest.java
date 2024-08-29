@@ -9,7 +9,6 @@ public class OrderRequest {
 
     @Getter
     public static class CreateOrder {
-        private Long userId;
         private UUID restaurantId;
         private String orderType;
         private String request;
