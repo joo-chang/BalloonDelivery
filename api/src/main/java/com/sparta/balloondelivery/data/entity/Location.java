@@ -9,24 +9,19 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.UUID;
 
 @Entity
-@Table(name = "p_addresses")
+@Table(name = "p_locations")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Address {
+public class Location {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "address_id", updatable = false, nullable = false)
-    private UUID addressId;
+    @Column(name = "location_id", updatable = false, nullable = false)
+    private UUID locationId;
 
-    @Column(nullable = false, length = 10)
-    private String address1;  // 우편번호
+    @Column(nullable = false, length = 100)
+    private String name;
 
-    @Column(nullable = false, length = 255)
-    private String address2;  // 주소
-
-    @Column(nullable = false, length = 255)
-    private String address3;  // 상세 주소
 }

@@ -9,24 +9,23 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.UUID;
 
 @Entity
-@Table(name = "p_addresses")
+@Table(name = "p_categories")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Address {
+public class Category {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "address_id", updatable = false, nullable = false)
-    private UUID addressId;
+    @Column(name = "category_id", updatable = false, nullable = false)
+    private UUID categoryId;
 
-    @Column(nullable = false, length = 10)
-    private String address1;  // 우편번호
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private CategoryName name;
 
-    @Column(nullable = false, length = 255)
-    private String address2;  // 주소
-
-    @Column(nullable = false, length = 255)
-    private String address3;  // 상세 주소
+    public enum CategoryName {
+        KOREAN, CHINESE, JAPANESE, WESTERN, OTHER
+    }
 }
