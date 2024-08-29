@@ -1,25 +1,36 @@
 package com.sparta.balloondelivery.data.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.sparta.balloondelivery.user.dto.UserReqDto;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Entity(name = "p_users")
-@Getter
-@Builder
-@NoArgsConstructor
+import java.util.UUID;
+
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity(name = "p_users")
 public class User {
     @Id
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String email;
-    private String nickname;
+    private String username;
     private String password;
-    private Enum<UserRole> role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+    private boolean deletedYN;
+
+    @JoinColumn(name = "address_id")
+    private UUID addressId;
+
+    public User(String email, String username, String password, UserRole role) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
 }
