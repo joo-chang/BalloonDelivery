@@ -12,12 +12,12 @@ public class RestaurantCreateResponse {
     private String name;
     private String content;
     private String phone;
-    private UUID userId;
+    private Long userId;
     private UUID categoryId;
     private UUID locationId;
     private UUID addressId;
 
-    public RestaurantCreateResponse(UUID restaurantId, String name, String content, String phone, UUID userId, UUID categoryId, UUID locationId, UUID addressId) {
+    public RestaurantCreateResponse(UUID restaurantId, String name, String content, String phone, Long userId, UUID categoryId, UUID locationId, UUID addressId) {
         this.restaurantId = restaurantId;
         this.name = name;
         this.content = content;

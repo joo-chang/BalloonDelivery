@@ -34,7 +34,7 @@ public class RestaurantController {
      */
     @PostMapping("/restaurants")
     public ApiResponse<RestaurantCreateResponse> createRestaurant(
-            @RequestHeader("userId") UUID userId,
+            @RequestHeader("userId") Long userId,
             @RequestBody RestaurantCreateRequest request
     ) {
         log.info("Received userId: {}", userId);
@@ -79,7 +79,7 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/users")
     public ApiResponse<RestaurantPageInfoResponse> getMyRestaurantInfo(
-            @RequestHeader("userId") UUID userId,
+            @RequestHeader("userId") Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {

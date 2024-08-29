@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
 
-    Page<Restaurant> findByUser_UserId(UUID userId, Pageable pageable);
+    Page<Restaurant> findByUserId(Long userId, Pageable pageable);
 
     @Query("SELECT r FROM Restaurant r WHERE r.name LIKE %:name%")
     Page<Restaurant> searchByName(@Param("name") String name, Pageable pageable);

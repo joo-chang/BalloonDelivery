@@ -19,7 +19,7 @@ public class Address {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "address_id", updatable = false, nullable = false)
-    private UUID addressId;
+    private UUID id;
 
     @Column(nullable = false, length = 10)
     private String address1;  // 우편번호
@@ -29,4 +29,17 @@ public class Address {
 
     @Column(nullable = false, length = 255)
     private String address3;  // 상세 주소
+
+    public Address(String address1, String address2, String address3) {
+        this.address1 = address1;
+        this.address2 = address2;
+        this.address3 = address3;
+    }
+
+
+    public void setAddress(String address1, String address2, String address3) {
+        this.address1 = address1;
+        this.address2 = address2;
+        this.address3 = address3;
+    }
 }

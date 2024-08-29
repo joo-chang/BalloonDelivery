@@ -34,7 +34,7 @@ public class RestaurantService {
      * @param request
      * @return
      */
-    public RestaurantCreateResponse createRestaurant(UUID userId, RestaurantCreateRequest request) {
+    public RestaurantCreateResponse createRestaurant(Long userId, RestaurantCreateRequest request) {
 
         User user = userRepository.findById(userId) // 헤더에서 받은 userId를 사용해 유저 조회
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
@@ -68,10 +68,10 @@ public class RestaurantService {
                 .name(savedRestaurant.getName())
                 .content(savedRestaurant.getContent())
                 .phone(savedRestaurant.getPhone())
-                .userId(savedRestaurant.getUser().getUserId())
+                .userId(savedRestaurant.getUser().getId())
                 .categoryId(savedRestaurant.getCategory().getCategoryId())
                 .locationId(savedRestaurant.getLocation().getLocationId())
-                .addressId(savedRestaurant.getAddress().getAddressId())
+                .addressId(savedRestaurant.getAddress().getId())
                 .build();
     }
 
@@ -140,7 +140,7 @@ public class RestaurantService {
                 .phone(updatedRestaurant.getPhone())
                 .categoryId(updatedRestaurant.getCategory().getCategoryId())
                 .locationId(updatedRestaurant.getLocation().getLocationId())
-                .addressId(updatedRestaurant.getAddress().getAddressId())
+                .addressId(updatedRestaurant.getAddress().getId())
                 .build();
     }
 
@@ -176,11 +176,11 @@ public class RestaurantService {
      * @param size
      * @return
      */
-    public RestaurantPageInfoResponse getMyRestaurantInfo(UUID userId, int page, int size) {
+    public RestaurantPageInfoResponse getMyRestaurantInfo(Long userId, int page, int size) {
 //        UUID userUUID = UUID.fromString(userId);
 
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Restaurant> restaurantPage = restaurantRepository.findByUser_UserId(userId, pageRequest);
+        Page<Restaurant> restaurantPage = restaurantRepository.findByUserId(userId, pageRequest);
 
         List<RestaurantInfoResponse> content = restaurantPage.getContent().stream()
                 .map(RestaurantInfoResponse::toDto)
