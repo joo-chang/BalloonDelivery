@@ -50,4 +50,25 @@ public class OrderResponse {
         }
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RestaurantOrderList {
+        private UUID id;
+        private String orderStatus;
+        private String orderType;
+        private Long totalPrice;
+        private String username;
+
+        public static RestaurantOrderList toDto(Order order) {
+            return RestaurantOrderList.builder()
+                    .id(order.getId())
+                    .orderStatus(order.getOrderStatus().name())
+                    .orderType(order.getOrderType().name())
+                    .totalPrice(order.getTotalPrice())
+                    .username(order.getUser().getUsername())
+                    .build();
+        }
+    }
 }

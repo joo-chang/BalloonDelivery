@@ -36,5 +36,15 @@ public class OrderController {
         return ApiResponse.success(HttpStatus.OK.name(), response);
     }
 
+    /**
+     * 가게 주문 조회 API
+     */
+    @GetMapping("/{restaurantId}")
+    public ApiResponse<?> getRestaurantOrders(
+            @RequestHeader(value = "X-User-Id") String userId,
+            @PathVariable UUID restaurantId) {
+        var response = orderService.getRestaurantOrders(userId, restaurantId);
+        return ApiResponse.success(HttpStatus.OK.name(), response);
+    }
 
 }

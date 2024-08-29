@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -78,6 +79,19 @@ public class OrderService {
 
         return orders.stream()
                 .map(OrderResponse.MyOrderList::toDto)
+                .toList();
+    }
+
+    public List<OrderResponse.RestaurantOrderList> getRestaurantOrders(String userId, UUID restaurantId) {
+        userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
+
+        List<Order> orders = orderRepository.findByRestaurantIdOrderByCreatedAtDesc(restaurant.getRestaurantId());
+
+        return orders.stream()
+                .map(OrderResponse.RestaurantOrderList::toDto)
                 .toList();
     }
 }

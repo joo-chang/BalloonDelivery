@@ -1,6 +1,5 @@
 package com.sparta.balloondelivery.data.entity;
 
-import com.sparta.balloondelivery.order.dto.OrderDto;
 import com.sparta.balloondelivery.util.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
