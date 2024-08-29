@@ -2,6 +2,7 @@ package com.sparta.balloondelivery.user.controller;
 
 import com.sparta.balloondelivery.data.entity.UserRole;
 import com.sparta.balloondelivery.exception.BaseException;
+import com.sparta.balloondelivery.user.dto.AddressReqDto;
 import com.sparta.balloondelivery.user.dto.RoleUpdateReqDto;
 import com.sparta.balloondelivery.user.dto.UserReqDto;
 import com.sparta.balloondelivery.user.service.UserService;
@@ -34,7 +35,7 @@ public class UserController {
                                   @RequestHeader(value = "X-User-Role", required = true) String userRole,
                                   @PathVariable Long targetUserId) {
 
-        if (!userRole.equals(UserRole.MANAGER.name()) && !userId.equals(targetUserId.toString())) {
+        if (!userId.equals(targetUserId.toString()) && !userRole.equals(UserRole.MANAGER.name())) {
             throw new BaseException(ErrorCode.NO_PERMISSION);
         }
         return ApiResponse.success("OK", userService.getUser(targetUserId), SuccessCode.FIND_SUCCESS.getSuccessMsg());

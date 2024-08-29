@@ -4,13 +4,13 @@ import com.sparta.balloondelivery.auth.dto.SignInReqDto;
 import com.sparta.balloondelivery.auth.dto.SignUpReqDto;
 import com.sparta.balloondelivery.auth.service.AuthService;
 import com.sparta.balloondelivery.data.entity.User;
+import com.sparta.balloondelivery.data.entity.UserRole;
+import com.sparta.balloondelivery.user.dto.AddressReqDto;
 import com.sparta.balloondelivery.util.ApiResponse;
+import com.sparta.balloondelivery.util.SuccessCode;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -24,16 +24,21 @@ public class AuthController {
     }
 
 
-
     @PostMapping("/signUp")
     public ApiResponse<?> signUp(@Valid @RequestBody SignUpReqDto request) {
         User user = authService.signUp(request);
-        return ApiResponse.success("success",user.getId(),"회원가입에 성공했습니다.");
+        return ApiResponse.success("success", user.getId(), "회원가입에 성공했습니다.");
     }
 
     @PostMapping("/signIn")
     public ApiResponse<?> signIn(@RequestBody SignInReqDto request) {
         String accessToken = authService.signIn(request);
-        return ApiResponse.success("success",accessToken);
+        return ApiResponse.success("success", accessToken);
     }
+
+    @GetMapping("/getPermission/{userId}")
+    public String getPermission(@PathVariable Long userId) {
+        return authService.getPermission(userId).name();
+    }
+
 }

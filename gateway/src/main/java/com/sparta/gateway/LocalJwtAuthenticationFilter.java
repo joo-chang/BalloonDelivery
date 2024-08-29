@@ -1,13 +1,16 @@
 package com.sparta.gateway;
 
+import com.sparta.gateway.client.AuthClient;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -15,10 +18,18 @@ import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
 
+@Slf4j
 @Component
 public class LocalJwtAuthenticationFilter implements GlobalFilter {
+
     @Value("${jwt.secret}")
     private String secretKey;
+
+    private final AuthClient authClient;
+
+    public LocalJwtAuthenticationFilter(@Lazy AuthClient authClient) {
+        this.authClient = authClient;
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -32,6 +43,8 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
+
+
         return chain.filter(exchange);
     }
 
@@ -42,16 +55,16 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
                     .verifyWith(key)
                     .build().parseSignedClaims(token);
             Claims claims = claimsJws.getPayload();
+            String userId = claims.get("user_id").toString();
             exchange.getRequest().mutate()
-                    .header("X-User-Id", claims.get("user_id").toString())
+                    .header("X-User-Id", userId)
+                    .header("X-User-Role", authClient.getPermission(Long.valueOf(userId)))
                     .build();
             return true;
         } catch (Exception e) {
             return false;
         }
     }
-
-    //auth service로 user 권한을 물어보는 코드 추가
 
     private String extractToken(ServerWebExchange exchange) {
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");

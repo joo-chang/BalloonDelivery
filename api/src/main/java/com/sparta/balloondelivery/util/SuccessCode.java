@@ -19,8 +19,6 @@ public enum SuccessCode {
     PAY_SUCCESS("결제에 성공했습니다."),
     REFUND_SUCCESS("환불에 성공했습니다."),
     DELIVERY_SUCCESS("배송에 성공했습니다."),
-
-
     ;
 
 

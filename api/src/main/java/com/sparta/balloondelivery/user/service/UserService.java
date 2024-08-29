@@ -1,10 +1,12 @@
 package com.sparta.balloondelivery.user.service;
 
 import com.sparta.balloondelivery.auth.service.AuthService;
+import com.sparta.balloondelivery.data.entity.Address;
 import com.sparta.balloondelivery.data.entity.User;
 import com.sparta.balloondelivery.data.entity.UserRole;
 import com.sparta.balloondelivery.data.repository.UserRepository;
 import com.sparta.balloondelivery.exception.BaseException;
+import com.sparta.balloondelivery.user.dto.AddressReqDto;
 import com.sparta.balloondelivery.user.dto.RoleUpdateReqDto;
 import com.sparta.balloondelivery.user.dto.UserReqDto;
 import com.sparta.balloondelivery.user.dto.UserResDto;
@@ -22,12 +24,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthService authService;
     private static final String USER_ROLE =  "userRole";
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthService authService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authService = authService;
     }
 
     public UserResDto getUser(Long targetUserId) {

@@ -80,7 +80,7 @@ public class AuthService {
     }
 
     @Cacheable(cacheNames = USER_ROLE, key = "#userId")
-    public UserRole hasPermission(Long userId) {
+    public UserRole getPermission(Long userId) {
         return userRepository.findRoleById(userId);
     }
 
