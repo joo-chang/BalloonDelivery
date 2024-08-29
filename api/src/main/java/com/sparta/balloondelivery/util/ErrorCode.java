@@ -22,8 +22,9 @@ public enum ErrorCode {
     NOT_EXIST_USER("존재하지 않는 사용자입니다."),
     NO_PERMISSION("권한이 없습니다."),
     EXIST_ADDRESS("이미 주소가 존재합니다."),
-    JWT_NOT_FOUND("토큰이 존재하지 않습니다.")
-    ;
+    JWT_NOT_FOUND("토큰이 존재하지 않습니다."),
+    PAYMENT_NOT_FOUND("결제 정보가 존재하지 않습니다."),
+    ORDER_NOT_FOUND("주문 정보가 존재하지 않습니다.");
 
 
     private final String status;
