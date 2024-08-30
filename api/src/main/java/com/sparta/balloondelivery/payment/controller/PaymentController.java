@@ -70,5 +70,5 @@ public class PaymentController {
     ) {
         return ApiResponse.success(HttpStatus.OK.name(), paymentService.getPayments(userId, pageable));
     }
-    
+
 }
