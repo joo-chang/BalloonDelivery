@@ -76,7 +76,9 @@ public class OrderResponse {
 
     @Getter
     @Builder
-    public class OrderDetailResponse {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class OrderDetailResponse {
         private UUID orderId;
         private String orderStatus;
         private String orderType;
@@ -100,6 +102,8 @@ public class OrderResponse {
 
         @Builder
         @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
         private static class OrderDetailDto {
             private String menuName;
             private int quantity;

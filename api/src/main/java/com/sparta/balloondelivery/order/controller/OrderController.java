@@ -64,7 +64,7 @@ public class OrderController {
      * 고객이 주문 취소할 때는 주문 상태가 주문 대기 상태일 때만 가능하다.
      * 가게가 주문 취소할 때는 주문 상태가 주문 대기 상태이거나 조리중일 때 가능하다.
      */
-    @DeleteMapping("/{orderId}")
+    @PutMapping("/{orderId}")
     public ApiResponse<?> cancelOrder(
             @RequestHeader(value = "X-User-Id") String userId,
             @RequestHeader(value = "X-User-Role") String role,
@@ -72,5 +72,6 @@ public class OrderController {
         orderService.cancelOrder(userId, role, orderId);
         return ApiResponse.success(HttpStatus.OK.name(), null, "주문이 취소되었습니다.");
     }
+
 
 }

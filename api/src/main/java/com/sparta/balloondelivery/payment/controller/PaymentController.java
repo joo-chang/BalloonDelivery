@@ -41,12 +41,30 @@ public class PaymentController {
     /**
      * 결제 상세 조회 API
      */
-    @GetMapping
+    @GetMapping("/{paymentId}")
     public ApiResponse<?> getPayment(
             @RequestHeader("X-USER-ID") Long userId,
-            @RequestParam UUID paymentId) {
-        paymentService.getPayment(userId, paymentId);
+            @PathVariable UUID paymentId) {
+        return ApiResponse.success(HttpStatus.OK.name(), paymentService.getPayment(userId, paymentId));
+    }
+
+    /**
+     * 결제 내역 삭제 API
+     */
+    @DeleteMapping("/{paymentId}")
+    public ApiResponse<?> deletePayment(
+            @RequestHeader("X-USER-ID") Long userId,
+            @PathVariable UUID paymentId) {
+        paymentService.deletePayment(userId, paymentId);
         return ApiResponse.success(HttpStatus.OK.name(), null);
     }
 
+    /**
+     * 결제 내역 조회 API
+     */
+    @GetMapping
+    public ApiResponse<?> getPayments(
+            @RequestHeader("X-USER-ID") Long userId) {
+        return ApiResponse.success(HttpStatus.OK.name(), paymentService.getPayments(userId));
+    }
 }

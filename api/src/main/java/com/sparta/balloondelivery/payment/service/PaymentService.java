@@ -2,6 +2,7 @@ package com.sparta.balloondelivery.payment.service;
 
 import com.sparta.balloondelivery.data.entity.Order;
 import com.sparta.balloondelivery.data.entity.Payment;
+import com.sparta.balloondelivery.data.entity.User;
 import com.sparta.balloondelivery.data.repository.OrderRepository;
 import com.sparta.balloondelivery.data.repository.PaymentRepository;
 import com.sparta.balloondelivery.data.repository.UserRepository;
@@ -28,11 +29,10 @@ public class PaymentService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-        Payment payment = paymentRepository.findByPaymentIdAndUserId(updateOrderStatus.getPaymentId(), userId)
+        Payment payment = paymentRepository.findByIdAndUserId(updateOrderStatus.getPaymentId(), userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.PAYMENT_NOT_FOUND));
 
-        Order order = orderRepository.findByPaymentId(payment.getId())
-                .orElseThrow(() -> new BaseException(ErrorCode.ORDER_NOT_FOUND));
+        Order order = payment.getOrder();
 
         // 결제 정보 저장
         payment.updatePayment(updateOrderStatus);
@@ -45,16 +45,16 @@ public class PaymentService {
         }
     }
 
+    @Transactional
     public void cancelPayment(Long userId, UUID paymentId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-        Payment payment = paymentRepository.findByPaymentIdAndUserId(paymentId, userId)
+        Payment payment = paymentRepository.findByIdAndUserId(paymentId, userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.PAYMENT_NOT_FOUND));
 
 
-        Order order = orderRepository.findByPaymentId(payment.getId())
-                .orElseThrow(() -> new BaseException(ErrorCode.ORDER_NOT_FOUND));
+        Order order = payment.getOrder();
 
         // 조리중이거나 완료된 주문은 취소할 수 없음
         if (order.getOrderStatus() == Order.OrderStatus.COOKING || order.getOrderStatus() == Order.OrderStatus.COMPLETED) {
@@ -79,6 +79,29 @@ public class PaymentService {
     }
 
 
-    public PaymentResponse getPayment(Long userId, UUID paymentId) {
+    public PaymentResponse.PaymentDetail getPayment(Long userId, UUID paymentId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Payment payment = paymentRepository.findByIdAndUserId(paymentId, userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        return PaymentResponse.PaymentDetail.toDto(payment);
+    }
+
+
+    @Transactional
+    public void deletePayment(Long userId, UUID paymentId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Payment payment = paymentRepository.findByIdAndUserId(paymentId, userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        payment.setDeletedYnTrue(user.getUsername());
+
+    }
+
+    public List<PaymentResponse.PaymentDetail> getPayments(Long userId) {
     }
 }

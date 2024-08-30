@@ -11,6 +11,7 @@ public enum ErrorCode {
     INVALID_PARAMETER("요청한 값이 올바르지 않습니다."),
     AUTHENTICATION_FAIL("인증 정보가 올바르지 않습니다."),
     AUTHORIZATION_FAIL("권한이 없습니다."),
+    ENTITY_NOT_FOUND("존재하지 않는 엔티티입니다."),
     INCORRECT_USER("사용자 정보가 올바르지 않습니다."),
     USER_NOT_FOUND("사용자 정보가 존재하지 않습니다."),
     DATA_LENGTH_OVER_EXCEPTION("데이터 길이가 초과되었습니다."),

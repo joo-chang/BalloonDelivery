@@ -47,6 +47,7 @@ public class Payment extends BaseEntity {
 
     public void updatePayment(PaymentRequest.UpdateOrderStatus updateOrderStatus) {
         this.paymentStatus = PaymentStatus.valueOf(updateOrderStatus.getPaymentStatus());
+        // TODO: 암호화 필요함
         this.card = updateOrderStatus.getCard();
         this.requestedAt = updateOrderStatus.getRequestedAt();
         this.approvedAt = updateOrderStatus.getApprovedAt();

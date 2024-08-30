@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -88,7 +87,7 @@ public class OrderService {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
 
-        List<Order> orders = orderRepository.findByRestaurantIdOrderByCreatedAtDesc(restaurant.getRestaurantId());
+        List<Order> orders = orderRepository.findByRestaurantRestaurantIdOrderByCreatedAtDesc(restaurant.getRestaurantId());
 
         return orders.stream()
                 .map(OrderResponse.RestaurantOrderList::toDto)
@@ -99,7 +98,7 @@ public class OrderService {
         userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-        Order order = orderRepository.findByOrderIdAndUserId(orderId, Long.parseLong(userId));
+        Order order = orderRepository.findByIdAndUserId(orderId, Long.parseLong(userId));
 
         return OrderResponse.OrderDetailResponse.toDto(order);
     }
@@ -108,7 +107,7 @@ public class OrderService {
         User user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-        Order order = orderRepository.findByOrderIdAndUserId(orderId, user.getId());
+        Order order = orderRepository.findByIdAndUserId(orderId, user.getId());
 
         Payment payment = paymentRepository.findByOrderId(order.getId())
                 .orElseThrow(() -> new BaseException(ErrorCode.PAYMENT_NOT_FOUND));

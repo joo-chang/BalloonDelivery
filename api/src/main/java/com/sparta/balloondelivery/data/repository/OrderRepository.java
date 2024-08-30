@@ -1,6 +1,7 @@
 package com.sparta.balloondelivery.data.repository;
 
 import com.sparta.balloondelivery.data.entity.Order;
+import com.sparta.balloondelivery.data.entity.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,9 +13,7 @@ import java.util.UUID;
 public interface OrderRepository extends JpaRepository<Order, UUID> {
     List<Order> findByUserId(Long id);
 
-    Optional<Order> findByPaymentId(UUID paymentId);
+    List<Order> findByRestaurantRestaurantIdOrderByCreatedAtDesc(UUID restaurantId);
 
-    List<Order> findByRestaurantIdOrderByCreatedAtDesc(UUID restaurantId);
-
-    Order findByOrderIdAndUserId(UUID orderId, Long userId);
+    Order findByIdAndUserId(UUID id, Long userId);
 }
