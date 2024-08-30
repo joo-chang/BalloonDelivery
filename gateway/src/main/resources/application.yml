@@ -16,13 +16,7 @@ spring:
           predicates:
             - Path=/**
   profiles:
-    include: private
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      username: default
-      password: default
+    include: private, datasource
 eureka:
   client:
     service-url:

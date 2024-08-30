@@ -1,9 +1,10 @@
 package com.sparta.balloondelivery.data.entity;
 
-import com.sparta.balloondelivery.user.dto.UserReqDto;
+import com.sparta.balloondelivery.util.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "p_users")
-public class User {
+public class User extends BaseEntity {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,6 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    private boolean deletedYN;
 
     @JoinColumn(name = "address_id")
     private UUID addressId;
@@ -31,6 +31,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.setCreatedBy(username);
     }
 
 }

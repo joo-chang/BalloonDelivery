@@ -9,7 +9,6 @@ public enum ErrorCode {
 
     // 비즈니스 로직 에러 (모니터링 대상 아님)
     INVALID_PARAMETER("요청한 값이 올바르지 않습니다."),
-    ENTITY_NOT_FOUND("존재하지 않는 엔티티입니다."),
     AUTHENTICATION_FAIL("인증 정보가 올바르지 않습니다."),
     AUTHORIZATION_FAIL("권한이 없습니다."),
     INCORRECT_USER("사용자 정보가 올바르지 않습니다."),
@@ -26,7 +25,9 @@ public enum ErrorCode {
     PAYMENT_NOT_FOUND("결제 정보가 존재하지 않습니다."),
     ORDER_NOT_FOUND("주문 정보가 존재하지 않습니다."),
     PAYMENT_CANCEL_FAILED("결제 취소에 실패했습니다."),
-    ORDER_CANNOT_BE_CANCELED("주문이 진행 중이어서 취소할 수 없습니다."),;
+    ORDER_CANNOT_BE_CANCELED("주문이 진행 중이어서 취소할 수 없습니다."),
+    ADDRESS_LIMIT("배송지는 최대 10개까지만 등록 가능합니다."),
+    ;
 
 
     private final String status;

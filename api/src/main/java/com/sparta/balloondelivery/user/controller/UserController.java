@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-// TODO : 회원 조회, 회원 수정, 회원 삭제 API 구현
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -75,29 +75,37 @@ public class UserController {
         userService.updateUserRole(targetUserId, roleUpdateReqDto);
         return ApiResponse.success("OK", userId, SuccessCode.UPDATE_SUCCESS.getSuccessMsg());
     }
-
     @GetMapping("/address")
-    public ApiResponse<?> getAddress(@RequestHeader(value = "X-User-Id", required = true) String userId) {
-        return ApiResponse.success("OK", userService.getAddress(Long.parseLong(userId)), SuccessCode.SUCCESS.getSuccessMsg());
+    public ApiResponse<?> getAddress(@RequestHeader(value = "X-User-Id", required = true) String userId, Pageable pageable) {
+        return ApiResponse.success("OK", userService.getAddress(Long.parseLong(userId), pageable), SuccessCode.SUCCESS.getSuccessMsg());
+    }
+
+    @GetMapping("/address/{addressId}")
+    public ApiResponse<?> getAddress(@RequestHeader(value = "X-User-Id", required = true) String userId, @PathVariable UUID addressId) {
+        return ApiResponse.success("OK", userService.getAddressById(Long.parseLong(userId), addressId), SuccessCode.SUCCESS.getSuccessMsg());
     }
 
     @PostMapping("/address")
     public ApiResponse<?> addAddress(@RequestHeader(value = "X-User-Id", required = true) String userId,
+                                     @RequestHeader(value = "X-User-Name", required = true) String userName,
                                      @Valid @RequestBody AddressReqDto addressReqDto) {
-        userService.addAddress(Long.parseLong(userId), addressReqDto);
+        userService.addAddress(Long.parseLong(userId), addressReqDto, userName);
         return ApiResponse.success("OK", userId, SuccessCode.SUCCESS.getSuccessMsg());
     }
 
-    @PutMapping("/address")
+    @PutMapping("/address/{addressId}")
     public ApiResponse<?> updateAddress(@RequestHeader(value = "X-User-Id", required = true) String userId,
-                                        @Valid @RequestBody AddressReqDto addressReqDto) {
-        userService.updateAddress(Long.parseLong(userId), addressReqDto);
+                                        @RequestHeader(value = "X-User-Name", required = true) String userName,
+                                        @Valid @RequestBody AddressReqDto addressReqDto, @PathVariable UUID addressId) {
+        userService.updateAddress(Long.parseLong(userId),addressId, addressReqDto,userName);
         return ApiResponse.success("OK", userId, SuccessCode.SUCCESS.getSuccessMsg());
     }
 
-    @DeleteMapping("/address")
-    public ApiResponse<?> deleteAddress(@RequestHeader(value = "X-User-Id", required = true) String userId) {
-        userService.deleteAddress(Long.parseLong(userId));
+    @DeleteMapping("/address/{addressId}")
+    public ApiResponse<?> deleteAddress(@RequestHeader(value = "X-User-Id", required = true) String userId,
+                                        @RequestHeader(value = "X-User-Name", required = true) String userName,
+                                        @PathVariable UUID addressId) {
+        userService.deleteAddress(Long.parseLong(userId),addressId,userName);
         return ApiResponse.success("OK", userId, SuccessCode.SUCCESS.getSuccessMsg());
     }
 
