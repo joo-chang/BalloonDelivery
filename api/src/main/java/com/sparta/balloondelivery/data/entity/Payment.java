@@ -41,12 +41,16 @@ public class Payment extends BaseEntity {
 
     public enum PaymentStatus {
         // 결제 요청, 결제 완료, 결제 실패, 결제 취소 요청, 결제 취소 완료)
-        REQUESTED, COMPLETED, FAILED, CANCEL_REQUESTED, CANCELLED
+        REQUESTED, COMPLETED, FAILED, CANCEL_REQUESTED, CANCELED
     }
 
     public void updatePayment(PaymentRequest.UpdateOrderStatus updateOrderStatus) {
         this.paymentStatus = PaymentStatus.valueOf(updateOrderStatus.getPaymentStatus());
         this.requestedAt = updateOrderStatus.getRequestedAt();
         this.approvedAt = updateOrderStatus.getApprovedAt();
+    }
+
+    public void updatePayment(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

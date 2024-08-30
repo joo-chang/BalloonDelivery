@@ -24,7 +24,9 @@ public enum ErrorCode {
     EXIST_ADDRESS("이미 주소가 존재합니다."),
     JWT_NOT_FOUND("토큰이 존재하지 않습니다."),
     PAYMENT_NOT_FOUND("결제 정보가 존재하지 않습니다."),
-    ORDER_NOT_FOUND("주문 정보가 존재하지 않습니다.");
+    ORDER_NOT_FOUND("주문 정보가 존재하지 않습니다."),
+    PAYMENT_CANCEL_FAILED("결제 취소에 실패했습니다."),
+    ORDER_CANNOT_BE_CANCELED("주문이 진행 중이어서 취소할 수 없습니다."),;
 
 
     private final String status;
