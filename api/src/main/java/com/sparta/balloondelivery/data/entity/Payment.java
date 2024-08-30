@@ -27,6 +27,7 @@ public class Payment extends BaseEntity {
     private PaymentStatus paymentStatus;
 
     private Long price;
+    // 카드 정보 암호화 필요
     private String card;
     private LocalDateTime requestedAt;
     private LocalDateTime approvedAt;
@@ -46,6 +47,7 @@ public class Payment extends BaseEntity {
 
     public void updatePayment(PaymentRequest.UpdateOrderStatus updateOrderStatus) {
         this.paymentStatus = PaymentStatus.valueOf(updateOrderStatus.getPaymentStatus());
+        this.card = updateOrderStatus.getCard();
         this.requestedAt = updateOrderStatus.getRequestedAt();
         this.approvedAt = updateOrderStatus.getApprovedAt();
     }

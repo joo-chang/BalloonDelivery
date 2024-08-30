@@ -94,4 +94,43 @@ public class OrderService {
                 .map(OrderResponse.RestaurantOrderList::toDto)
                 .toList();
     }
+
+    public OrderResponse.OrderDetailResponse getOrderDetail(String userId, UUID orderId) {
+        userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Order order = orderRepository.findByOrderIdAndUserId(orderId, Long.parseLong(userId));
+
+        return OrderResponse.OrderDetailResponse.toDto(order);
+    }
+
+    public void cancelOrder(String userId, String role, UUID orderId) {
+        User user = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Order order = orderRepository.findByOrderIdAndUserId(orderId, user.getId());
+
+        Payment payment = paymentRepository.findByOrderId(order.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        // 권한별 주문 취소 가능 여부 체크
+        if (role.equals("USER")) {
+            if (order.getOrderStatus() != Order.OrderStatus.WAITING_FOR_PAYMENT) {
+                throw new BaseException(ErrorCode.ORDER_CANNOT_BE_CANCELED);
+            }
+        } else if (role.equals("RESTAURANT")) {
+            if (order.getOrderStatus() != Order.OrderStatus.WAITING_FOR_PAYMENT && order.getOrderStatus() != Order.OrderStatus.COOKING) {
+                throw new BaseException(ErrorCode.ORDER_CANNOT_BE_CANCELED);
+            }
+        }
+
+        // 결제 취소 요청을 보냈다고 가정
+        boolean isPaymentCanceled = true;
+
+        if (isPaymentCanceled) {
+            payment.updatePayment(Payment.PaymentStatus.CANCELED);
+        }
+
+        order.updateOrder(Order.OrderStatus.CANCELED);
+    }
 }

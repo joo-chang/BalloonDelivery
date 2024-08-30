@@ -7,6 +7,7 @@ import com.sparta.balloondelivery.data.repository.PaymentRepository;
 import com.sparta.balloondelivery.data.repository.UserRepository;
 import com.sparta.balloondelivery.exception.BaseException;
 import com.sparta.balloondelivery.payment.dto.PaymentRequest;
+import com.sparta.balloondelivery.payment.dto.PaymentResponse;
 import com.sparta.balloondelivery.util.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -78,4 +79,6 @@ public class PaymentService {
     }
 
 
+    public PaymentResponse getPayment(Long userId, UUID paymentId) {
+    }
 }

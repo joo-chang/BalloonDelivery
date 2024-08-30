@@ -2,7 +2,9 @@ package com.sparta.balloondelivery.payment.controller;
 
 import com.sparta.balloondelivery.payment.dto.PaymentRequest;
 import com.sparta.balloondelivery.payment.service.PaymentService;
+import com.sparta.balloondelivery.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -17,20 +19,34 @@ public class PaymentController {
      * 결제 응답 API (PG사로 부터 받은 정보)
      */
     @PutMapping
-    public void paymentResponse(
+    public ApiResponse<?> paymentResponse(
             @RequestHeader("X-USER-ID") Long userId,
             @RequestBody PaymentRequest.UpdateOrderStatus updateOrderStatus) {
         paymentService.paymentResponse(userId, updateOrderStatus);
+        return ApiResponse.success(HttpStatus.OK.name(), null);
     }
 
     /**
      * 결제 취소 API
      */
-    @DeleteMapping("/{paymentId}")
-    public void cancelPayment(
+    @PutMapping("/{paymentId}")
+    public ApiResponse<?> cancelPayment(
             @RequestHeader("X-USER-ID") Long userId,
             @PathVariable UUID paymentId) {
         paymentService.cancelPayment(userId, paymentId);
+        return ApiResponse.success(HttpStatus.OK.name(), null);
+    }
+
+
+    /**
+     * 결제 상세 조회 API
+     */
+    @GetMapping
+    public ApiResponse<?> getPayment(
+            @RequestHeader("X-USER-ID") Long userId,
+            @RequestParam UUID paymentId) {
+        paymentService.getPayment(userId, paymentId);
+        return ApiResponse.success(HttpStatus.OK.name(), null);
     }
 
 }

@@ -12,6 +12,7 @@ public class PaymentRequest {
     public static class UpdateOrderStatus {
         private UUID paymentId;
         private String paymentStatus;
+        private String card;
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime requestedAt;
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
