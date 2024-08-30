@@ -37,3 +37,4 @@ out/
 .vscode/
 
 application-private.yml
+application-datasource.yml
