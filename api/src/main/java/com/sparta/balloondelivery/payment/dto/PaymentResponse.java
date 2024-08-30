@@ -58,4 +58,11 @@ public class PaymentResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    public static class RetryPayment {
+        private UUID orderId;
+        private UUID newPaymentId;
+    }
 }

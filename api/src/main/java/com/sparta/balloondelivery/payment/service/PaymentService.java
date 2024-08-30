@@ -114,4 +114,33 @@ public class PaymentService {
         // PaymentDto로 변환
         return payments.map(PaymentResponse.PaymentDto::toDto);
     }
+
+    // orderId, 새로운 paymentId 응답
+    public PaymentResponse.RetryPayment retryPayment(Long userId, UUID paymentId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Payment payment = paymentRepository.findByIdAndUserId(paymentId, userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        Order order = payment.getOrder();
+
+        // 기존 결제 상태 변경
+        payment.updatePayment(Payment.PaymentStatus.CANCELED);
+
+        // 신규 결제 생성
+        Payment newPayment = Payment.builder()
+                .paymentStatus(Payment.PaymentStatus.REQUESTED)
+                .price(payment.getPrice())
+                .order(order)
+                .user(user)
+                .build();
+
+        paymentRepository.save(newPayment);
+
+        return PaymentResponse.RetryPayment.builder()
+                .orderId(order.getId())
+                .newPaymentId(newPayment.getId())
+                .build();
+    }
 }
