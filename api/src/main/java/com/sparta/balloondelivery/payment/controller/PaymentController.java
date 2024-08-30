@@ -4,6 +4,7 @@ import com.sparta.balloondelivery.payment.dto.PaymentRequest;
 import com.sparta.balloondelivery.payment.service.PaymentService;
 import com.sparta.balloondelivery.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,7 +65,10 @@ public class PaymentController {
      */
     @GetMapping
     public ApiResponse<?> getPayments(
-            @RequestHeader("X-USER-ID") Long userId) {
-        return ApiResponse.success(HttpStatus.OK.name(), paymentService.getPayments(userId));
+            @RequestHeader("X-USER-ID") Long userId,
+            Pageable pageable
+    ) {
+        return ApiResponse.success(HttpStatus.OK.name(), paymentService.getPayments(userId, pageable));
     }
+    
 }
