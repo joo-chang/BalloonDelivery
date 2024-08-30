@@ -44,10 +44,10 @@ public class MenuController {
      */
     @PutMapping("/{menu_id}")
     public ApiResponse<MenuUpdateResponse> updateMenu(
-            @PathVariable("menu_id") UUID menuId,
+            @PathVariable("menu_id") UUID id,
             @RequestBody MenuUpdateRequest request
     ) {
-        MenuUpdateResponse response = menuService.updateMenu(menuId, request);
+        MenuUpdateResponse response = menuService.updateMenu(id, request);
         return ApiResponse.success("", response, "메뉴 수정 성공");
     }
 
@@ -55,8 +55,8 @@ public class MenuController {
      * 메뉴 단건 조회 API
      */
     @GetMapping("/{menu_id}")
-    public ApiResponse<MenuInfoResponse> getMenuInfo(@PathVariable("menu_id") UUID menuId) {
-        MenuInfoResponse response = menuService.getMenuInfo(menuId);
+    public ApiResponse<MenuInfoResponse> getMenuInfo(@PathVariable("menu_id") UUID id) {
+        MenuInfoResponse response = menuService.getMenuInfo(id);
         return ApiResponse.success("", response, "메뉴 조회 성공");
     }
 
@@ -77,10 +77,10 @@ public class MenuController {
      */
     @PatchMapping("/{menu_id}/status")
     public ApiResponse<MenuUpdateResponse> updateMenuStatus(
-            @PathVariable("menu_id") UUID menuId,
+            @PathVariable("menu_id") UUID id,
             @RequestParam("status") Visiable status
     ) {
-        MenuUpdateResponse response = menuService.updateMenuStatus(menuId, status);
+        MenuUpdateResponse response = menuService.updateMenuStatus(id, status);
         return ApiResponse.success("", response, "메뉴 상태 변경 성공");
     }
 

@@ -1,5 +1,6 @@
 package com.sparta.balloondelivery.restaurant.dto.response;
 
+import com.sparta.balloondelivery.data.entity.Restaurant;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class RestaurantCreateResponse {
-    private UUID restaurantId;
+    private UUID id;
     private String name;
     private String content;
     private String phone;
@@ -17,14 +18,16 @@ public class RestaurantCreateResponse {
     private UUID locationId;
     private UUID addressId;
 
-    public RestaurantCreateResponse(UUID restaurantId, String name, String content, String phone, Long userId, UUID categoryId, UUID locationId, UUID addressId) {
-        this.restaurantId = restaurantId;
-        this.name = name;
-        this.content = content;
-        this.phone = phone;
-        this.userId = userId;
-        this.categoryId = categoryId;
-        this.locationId = locationId;
-        this.addressId = addressId;
+    public static RestaurantCreateResponse toDto(Restaurant restaurant) {
+        return RestaurantCreateResponse.builder()
+                .id(restaurant.getId())
+                .name(restaurant.getName())
+                .content(restaurant.getContent())
+                .phone(restaurant.getPhone())
+                .userId(restaurant.getUser().getId())
+                .categoryId(restaurant.getCategory().getId())
+                .locationId(restaurant.getLocation().getId())
+                .addressId(restaurant.getAddress().getId())
+                .build();
     }
 }

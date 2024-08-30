@@ -34,7 +34,7 @@ public class RestaurantController {
      */
     @PostMapping("/restaurants")
     public ApiResponse<RestaurantCreateResponse> createRestaurant(
-            @RequestHeader("userId") Long userId,
+            @RequestHeader("X-User-Id") Long userId,
             @RequestBody RestaurantCreateRequest request
     ) {
         log.info("Received userId: {}", userId);
@@ -47,9 +47,9 @@ public class RestaurantController {
      */
     @GetMapping("/restaurants/{restaurant_id}")
     public ApiResponse<RestaurantInfoResponse> getRestaurantInfo(
-            @PathVariable("restaurant_id") UUID restaurantId
+            @PathVariable("restaurant_id") UUID id
     ) {
-        RestaurantInfoResponse response = restaurantService.getRestaurantInfo(restaurantId);
+        RestaurantInfoResponse response = restaurantService.getRestaurantInfo(id);
         return ApiResponse.success("", response, "가게 정보 조회 성공");
     }
 
@@ -58,10 +58,10 @@ public class RestaurantController {
      */
     @PutMapping("/restaurants/{restaurant_id}")
     public ApiResponse<RestaurantUpdateResponse> updateRestaurant(
-            @PathVariable("restaurant_id") UUID restaurantId,
+            @PathVariable("restaurant_id") UUID id,
             @RequestBody RestaurantUpdateRequest request
     ) {
-        RestaurantUpdateResponse response = restaurantService.updateRestaurant(restaurantId, request);
+        RestaurantUpdateResponse response = restaurantService.updateRestaurant(id, request);
         return ApiResponse.success("", response, "가게 정보 수정 성공");
     }
 
@@ -79,7 +79,7 @@ public class RestaurantController {
 
     @GetMapping("/restaurants/users")
     public ApiResponse<RestaurantPageInfoResponse> getMyRestaurantInfo(
-            @RequestHeader("userId") Long userId,
+            @RequestHeader("X-User-Id") Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -94,10 +94,10 @@ public class RestaurantController {
      */
     @PatchMapping("/restaurants/{restaurant_id}/hide")
     public ApiResponse<RestaurantInfoResponse> hideRestaurant(
-            @PathVariable("restaurant_id") UUID restaurantId
+            @PathVariable("restaurant_id") UUID id
     ) {
         // 서비스에서 상태 변경 및 정보 반환
-        RestaurantInfoResponse response = restaurantService.hideRestaurant(restaurantId);
+        RestaurantInfoResponse response = restaurantService.hideRestaurant(id);
         return ApiResponse.success("", response, "가게 표시 상태가 변경되었습니다.");
     }
 
