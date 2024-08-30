@@ -49,6 +49,7 @@ public class RestaurantService {
         address.setAddress1(request.getAddress1());
         address.setAddress2(request.getAddress2());
         address.setAddress3(request.getAddress3());
+        address.setUserId(userId);
 
         Address savedAddress = addressRepository.save(address);
 
@@ -63,26 +64,17 @@ public class RestaurantService {
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return RestaurantCreateResponse.builder()
-                .restaurantId(savedRestaurant.getRestaurantId())
-                .name(savedRestaurant.getName())
-                .content(savedRestaurant.getContent())
-                .phone(savedRestaurant.getPhone())
-                .userId(savedRestaurant.getUser().getId())
-                .categoryId(savedRestaurant.getCategory().getCategoryId())
-                .locationId(savedRestaurant.getLocation().getLocationId())
-                .addressId(savedRestaurant.getAddress().getId())
-                .build();
+        return RestaurantCreateResponse.toDto(savedRestaurant);
     }
 
     /**
      * 가게 조회
      *
-     * @param restaurantId
+     * @param id
      * @return
      */
-    public RestaurantInfoResponse getRestaurantInfo(UUID restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+    public RestaurantInfoResponse getRestaurantInfo(UUID id) {
+        Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
 
         return RestaurantInfoResponse.toDto(restaurant);
@@ -91,12 +83,13 @@ public class RestaurantService {
     /**
      * 가게 정보 수정
      *
-     * @param restaurantId
+     * @param id
      * @param request
      * @return
      */
-    public RestaurantUpdateResponse updateRestaurant(UUID restaurantId, RestaurantUpdateRequest request) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+    public RestaurantUpdateResponse updateRestaurant(UUID id, RestaurantUpdateRequest request) {
+
+        Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
 
         // 이름 수정 (없으면 기존 값 유지)
@@ -127,21 +120,13 @@ public class RestaurantService {
         address.setAddress1(request.getAddress1().orElse(address.getAddress1()));
         address.setAddress2(request.getAddress2().orElse(address.getAddress2()));
         address.setAddress3(request.getAddress3().orElse(address.getAddress3()));
+        address.setUserId(restaurant.getUser().getId());
         Address savedAddress = addressRepository.save(address);
-
         restaurant.setAddress(savedAddress);
 
         Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
 
-        return RestaurantUpdateResponse.builder()
-                .restaurantId(updatedRestaurant.getRestaurantId())
-                .name(updatedRestaurant.getName())
-                .content(updatedRestaurant.getContent())
-                .phone(updatedRestaurant.getPhone())
-                .categoryId(updatedRestaurant.getCategory().getCategoryId())
-                .locationId(updatedRestaurant.getLocation().getLocationId())
-                .addressId(updatedRestaurant.getAddress().getId())
-                .build();
+        return RestaurantUpdateResponse.toDto(updatedRestaurant);
     }
 
     /**

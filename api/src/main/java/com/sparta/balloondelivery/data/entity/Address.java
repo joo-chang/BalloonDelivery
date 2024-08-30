@@ -35,12 +35,6 @@ public class Address extends BaseEntity {
     @Column(nullable = false, length = 255)
     private String address3;  // 상세 주소
 
-    public Address(String address1, String address2, String address3) {
-        this.address1 = address1;
-        this.address2 = address2;
-        this.address3 = address3;
-    }
-
     public Address(long userId, String address1, String address2, String address3) {
         this.userId = userId;
         this.address1 = address1;
@@ -48,10 +42,10 @@ public class Address extends BaseEntity {
         this.address3 = address3;
     }
 
-
     public void setAddress(String address1, String address2, String address3) {
         this.address1 = address1;
         this.address2 = address2;
         this.address3 = address3;
     }
+
 }

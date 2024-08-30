@@ -11,7 +11,7 @@ import java.util.UUID;
 @Setter
 @Builder
 public class RestaurantInfoResponse {
-    private UUID restaurantId;
+    private UUID id;
     private String name;
     private String content;
     private String phone;
@@ -23,14 +23,14 @@ public class RestaurantInfoResponse {
 
     public static RestaurantInfoResponse toDto(Restaurant restaurant) {
         return RestaurantInfoResponse.builder()
-                .restaurantId(restaurant.getRestaurantId())
+                .id(restaurant.getId())
                 .name(restaurant.getName())
                 .content(restaurant.getContent())
                 .phone(restaurant.getPhone())
                 .visible(restaurant.getVisible())
                 .userId(restaurant.getUser().getId())
-                .categoryId(restaurant.getCategory().getCategoryId())
-                .locationId(restaurant.getLocation().getLocationId())
+                .categoryId(restaurant.getCategory().getId())
+                .locationId(restaurant.getLocation().getId())
                 .addressId(restaurant.getAddress().getId())
                 .build();
     }

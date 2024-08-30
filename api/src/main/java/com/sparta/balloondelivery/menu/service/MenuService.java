@@ -59,13 +59,13 @@ public class MenuService {
     /**
      * 메뉴 수정
      *
-     * @param menuId
+     * @param id
      * @param request
      * @return
      */
     @Transactional
-    public MenuUpdateResponse updateMenu(UUID menuId, MenuUpdateRequest request) {
-        Menu menu = menuRepository.findById(menuId)
+    public MenuUpdateResponse updateMenu(UUID id, MenuUpdateRequest request) {
+        Menu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid menu ID"));
 
         // 이름, 가격, 내용 수정 (없으면 기존 값 유지)
@@ -82,12 +82,12 @@ public class MenuService {
     /**
      * 메뉴 단건 조회
      *
-     * @param menuId
+     * @param id
      * @return
      */
     @Transactional(readOnly = true)
-    public MenuInfoResponse getMenuInfo(UUID menuId) {
-        Menu menu = menuRepository.findById(menuId)
+    public MenuInfoResponse getMenuInfo(UUID id) {
+        Menu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid menu ID"));
 
         return MenuInfoResponse.toDto(menu);
@@ -113,13 +113,13 @@ public class MenuService {
     /**
      * 메뉴 상태 변경
      *
-     * @param menuId
+     * @param id
      * @param status
      * @return
      */
     @Transactional
-    public MenuUpdateResponse updateMenuStatus(UUID menuId, Visiable status) {
-        Menu menu = menuRepository.findById(menuId)
+    public MenuUpdateResponse updateMenuStatus(UUID id, Visiable status) {
+        Menu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid menu ID"));
 
         menu.setVisiable(status);
