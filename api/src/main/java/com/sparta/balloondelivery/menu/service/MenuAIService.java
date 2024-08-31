@@ -1,5 +1,7 @@
 package com.sparta.balloondelivery.menu.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.balloondelivery.data.entity.AILog;
 import com.sparta.balloondelivery.data.repository.AILogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +16,16 @@ import java.util.Map;
 public class MenuAIService {
     private final RestTemplate restTemplate;
     private final AILogRepository aiLogRepository;
+    private final ObjectMapper objectMapper;
 
     @Value("${ai.url}")
     private String url;
 
     @Autowired
-    public MenuAIService(RestTemplate restTemplate, AILogRepository aiLogRepository) {
+    public MenuAIService(RestTemplate restTemplate, AILogRepository aiLogRepository, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.aiLogRepository = aiLogRepository;
+        this.objectMapper = objectMapper;
     }
 
     public String createMenuContents(String text) {
@@ -45,19 +49,29 @@ public class MenuAIService {
 
         // POST 요청 보내기
         String response = restTemplate.postForObject(url, requestBody, String.class);
+        String contentResponse = "";
 
-        // 응답이 50자를 넘는 경우, 잘라냄
-        if (response != null && response.length() > 50) {
-            response = response.substring(0, 50);
+        try {
+            JsonNode root = objectMapper.readTree(response);
+            JsonNode candidatesNode = root.path("candidates");
+            if (candidatesNode.isArray() && candidatesNode.size() > 0) {
+                JsonNode partsNode = candidatesNode.get(0).path("content").path("parts");
+                if (partsNode.isArray() && partsNode.size() > 0) {
+                    contentResponse = partsNode.get(0).path("text").asText();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // 요청 및 응답 로그 저장
         AILog log = new AILog();
         log.setRequest(requestBody.toString());
-        log.setResponse(response);
+        log.setResponse(contentResponse);
         aiLogRepository.save(log);
 
         // 응답 처리
-        return response;
+        return contentResponse;
     }
 }
