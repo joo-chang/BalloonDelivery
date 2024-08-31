@@ -4,6 +4,7 @@ import com.sparta.balloondelivery.data.entity.Visiable;
 import com.sparta.balloondelivery.menu.dto.request.MenuCreateRequest;
 import com.sparta.balloondelivery.menu.dto.request.MenuUpdateRequest;
 import com.sparta.balloondelivery.menu.dto.response.MenuCreateResponse;
+import com.sparta.balloondelivery.menu.dto.response.MenuDeletedResponse;
 import com.sparta.balloondelivery.menu.dto.response.MenuInfoResponse;
 import com.sparta.balloondelivery.menu.dto.response.MenuUpdateResponse;
 import com.sparta.balloondelivery.menu.service.MenuAIService;
@@ -123,4 +124,14 @@ public class MenuController {
         return ApiResponse.success("메뉴 검색 성공", response);
     }
 
+    /**
+     * 메뉴 삭제 API (소프트 삭제)
+     */
+    @DeleteMapping("/{menu_id}")
+    public ApiResponse<MenuDeletedResponse> deleteMenu(
+            @PathVariable("menu_id") UUID id
+    ) {
+        MenuDeletedResponse response = menuService.deleteMenu(id);
+        return ApiResponse.success("", response, "메뉴 삭제 성공");
+    }
 }

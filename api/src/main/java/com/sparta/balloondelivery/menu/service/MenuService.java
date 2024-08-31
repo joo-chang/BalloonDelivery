@@ -8,6 +8,7 @@ import com.sparta.balloondelivery.data.repository.RestaurantRepository;
 import com.sparta.balloondelivery.menu.dto.request.MenuCreateRequest;
 import com.sparta.balloondelivery.menu.dto.request.MenuUpdateRequest;
 import com.sparta.balloondelivery.menu.dto.response.MenuCreateResponse;
+import com.sparta.balloondelivery.menu.dto.response.MenuDeletedResponse;
 import com.sparta.balloondelivery.menu.dto.response.MenuInfoResponse;
 import com.sparta.balloondelivery.menu.dto.response.MenuUpdateResponse;
 import lombok.RequiredArgsConstructor;
@@ -133,5 +134,23 @@ public class MenuService {
         return MenuUpdateResponse.toDto(updatedMenu);
     }
 
+    /**
+     * 메뉴 삭제 (소프트 삭제)
+     *
+     * @param id
+     * @return
+     */
+    @Transactional
+    public MenuDeletedResponse deleteMenu(UUID id) {
+        Menu menu = menuRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid menu ID"));
 
+        // 소프트 삭제 처리
+        menu.setDeletedYnTrue("삭제한 사용자 이름"); // 삭제한 사용자 이름을 설정
+
+        menuRepository.save(menu);
+
+        // 삭제된 메뉴 정보를 반환
+        return MenuDeletedResponse.toDto(menu);
+    }
 }
