@@ -2,10 +2,7 @@ package com.sparta.balloondelivery.restaurant.controller;
 
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantCreateRequest;
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantUpdateRequest;
-import com.sparta.balloondelivery.restaurant.dto.response.RestaurantCreateResponse;
-import com.sparta.balloondelivery.restaurant.dto.response.RestaurantInfoResponse;
-import com.sparta.balloondelivery.restaurant.dto.response.RestaurantPageInfoResponse;
-import com.sparta.balloondelivery.restaurant.dto.response.RestaurantUpdateResponse;
+import com.sparta.balloondelivery.restaurant.dto.response.*;
 import com.sparta.balloondelivery.restaurant.service.RestaurantSearchService;
 import com.sparta.balloondelivery.restaurant.service.RestaurantService;
 import com.sparta.balloondelivery.util.ApiResponse;
@@ -115,6 +112,18 @@ public class RestaurantController {
     ) {
         List<RestaurantInfoResponse> response = restaurantSearchService.searchRestaurants(name, categoryId, locationId, page, size);
         return ApiResponse.success("", response, "가게 검색 성공");
+    }
+
+    /**
+     * 가게 삭제 API (소프트 삭제)
+     */
+    @DeleteMapping("/restaurants/{restaurant_id}")
+    public ApiResponse<RestaurantDeletedResponse> deleteRestaurant(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable("restaurant_id") UUID id
+    ) {
+        RestaurantDeletedResponse response = restaurantService.deleteRestaurant(id, userId);
+        return ApiResponse.success("", response, "가게 삭제 성공");
     }
 
 }
