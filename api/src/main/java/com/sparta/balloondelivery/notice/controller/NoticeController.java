@@ -7,7 +7,10 @@ import com.sparta.balloondelivery.notice.service.NoticeService;
 import com.sparta.balloondelivery.util.ApiResponse;
 import com.sparta.balloondelivery.util.ErrorCode;
 import com.sparta.balloondelivery.util.SuccessCode;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/notice")
@@ -27,5 +30,15 @@ public class NoticeController {
         }
         noticeService.createNotice(userName, noticeReqDto);
         return ApiResponse.success("OK", SuccessCode.SUCCESS.getSuccessMsg());
+    }
+
+    @GetMapping("")
+    public ApiResponse<?> getAllNotice(Pageable pageable) {
+        return ApiResponse.success("OK", noticeService.getAllNotice(pageable), SuccessCode.FIND_SUCCESS.getSuccessMsg());
+    }
+
+    @GetMapping("/{noticeId}")
+    public ApiResponse<?> getNotice(@PathVariable UUID noticeId) {
+        return ApiResponse.success("OK", noticeService.getNotice(noticeId), SuccessCode.FIND_SUCCESS.getSuccessMsg());
     }
 }
