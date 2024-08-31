@@ -4,6 +4,7 @@ import com.sparta.balloondelivery.order.dto.OrderRequest;
 import com.sparta.balloondelivery.order.service.OrderService;
 import com.sparta.balloondelivery.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,8 @@ public class OrderController {
      * 주문 생성 API
      */
     @PostMapping
-    public ApiResponse<UUID> createOrder(
-            @RequestHeader(value = "X-User-Id") String userId,
+    public ApiResponse<?> createOrder(
+            @RequestHeader(value = "X-User-Id") Long userId,
             @RequestBody OrderRequest.CreateOrder createOrder) {
         var orderId = orderService.createOrder(userId, createOrder);
         return ApiResponse.success(HttpStatus.OK.name(), orderId);
@@ -31,7 +32,7 @@ public class OrderController {
      */
     @GetMapping
     public ApiResponse<?> getMyOrders(
-            @RequestHeader(value = "X-User-Id") String userId) {
+            @RequestHeader(value = "X-User-Id") Long userId) {
         var response = orderService.getMyOrders(userId);
         return ApiResponse.success(HttpStatus.OK.name(), response);
     }
@@ -41,7 +42,7 @@ public class OrderController {
      */
     @GetMapping("/{restaurantId}")
     public ApiResponse<?> getRestaurantOrders(
-            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader(value = "X-User-Id") Long userId,
             @PathVariable UUID restaurantId) {
         var response = orderService.getRestaurantOrders(userId, restaurantId);
         return ApiResponse.success(HttpStatus.OK.name(), response);
@@ -52,7 +53,7 @@ public class OrderController {
      */
     @GetMapping("/{orderId}")
     public ApiResponse<?> getOrderDetail(
-            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader(value = "X-User-Id") Long userId,
             @RequestHeader(value = "X-User-Role") String role,
             @PathVariable UUID orderId) {
         var response = orderService.getOrderDetail(userId, orderId);
@@ -64,14 +65,61 @@ public class OrderController {
      * 고객이 주문 취소할 때는 주문 상태가 주문 대기 상태일 때만 가능하다.
      * 가게가 주문 취소할 때는 주문 상태가 주문 대기 상태이거나 조리중일 때 가능하다.
      */
-    @PutMapping("/{orderId}")
+    @PutMapping("/{orderId}/cancel")
     public ApiResponse<?> cancelOrder(
-            @RequestHeader(value = "X-User-Id") String userId,
+            @RequestHeader(value = "X-User-Id") Long userId,
             @RequestHeader(value = "X-User-Role") String role,
             @PathVariable UUID orderId) {
         orderService.cancelOrder(userId, role, orderId);
         return ApiResponse.success(HttpStatus.OK.name(), null, "주문이 취소되었습니다.");
     }
 
+    /**
+     * 주문 검색 API
+     */
+    @GetMapping("/search")
+    public ApiResponse<?> searchOrder(
+            @RequestHeader(value = "X-User-Id") Long userId,
+            @RequestParam String restaurantName,
+            Pageable pageable
+    ) {
+        var response = orderService.searchOrder(userId, restaurantName, pageable);
+        return ApiResponse.success(HttpStatus.OK.name(), response);
+    }
+
+    /**
+     * 주문 요청 사항 수정 API
+     */
+    @PutMapping("/{orderId}")
+    public ApiResponse<?> updateOrder(
+            @RequestHeader(value = "X-User-Id") Long userId,
+            @PathVariable UUID orderId,
+            @RequestBody OrderRequest.UpdateOrder updateOrder) {
+        orderService.updateOrder(userId, orderId, updateOrder);
+        return ApiResponse.success(HttpStatus.OK.name(), null, "주문이 수정되었습니다.");
+    }
+
+    /**
+     * 주문 내역 삭제 API
+     */
+    @DeleteMapping("/{orderId}")
+    public ApiResponse<?> deleteOrder(
+            @RequestHeader(value = "X-User-Id") Long userId,
+            @PathVariable UUID orderId) {
+        orderService.deleteOrder(userId, orderId);
+        return ApiResponse.success(HttpStatus.OK.name(), null, "주문이 삭제되었습니다.");
+    }
+
+    /**
+     * 주문 상태 변경 API ( 주문 수락 )
+     */
+    @PutMapping("/{orderId}/status")
+    public ApiResponse<?> updateOrderStatus(
+            @RequestHeader(value = "X-User-Id") Long userId,
+            @PathVariable UUID orderId
+    ) {
+        orderService.updateOrderStatus(orderId);
+        return ApiResponse.success(HttpStatus.OK.name(), null, "주문 상태가 변경되었습니다.");
+    }
 
 }

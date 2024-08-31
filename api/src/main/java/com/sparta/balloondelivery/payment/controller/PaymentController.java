@@ -22,7 +22,8 @@ public class PaymentController {
     @PutMapping
     public ApiResponse<?> paymentResponse(
             @RequestHeader("X-USER-ID") Long userId,
-            @RequestBody PaymentRequest.UpdateOrderStatus updateOrderStatus) {
+            @RequestBody PaymentRequest.UpdateOrderStatus updateOrderStatus
+    ) {
         paymentService.paymentResponse(userId, updateOrderStatus);
         return ApiResponse.success(HttpStatus.OK.name(), null);
     }
@@ -30,10 +31,11 @@ public class PaymentController {
     /**
      * 결제 취소 API
      */
-    @PutMapping("/{paymentId}")
+    @PutMapping("/{paymentId}/cancel")
     public ApiResponse<?> cancelPayment(
             @RequestHeader("X-USER-ID") Long userId,
-            @PathVariable UUID paymentId) {
+            @PathVariable UUID paymentId
+    ) {
         paymentService.cancelPayment(userId, paymentId);
         return ApiResponse.success(HttpStatus.OK.name(), null);
     }
@@ -45,7 +47,8 @@ public class PaymentController {
     @GetMapping("/{paymentId}")
     public ApiResponse<?> getPayment(
             @RequestHeader("X-USER-ID") Long userId,
-            @PathVariable UUID paymentId) {
+            @PathVariable UUID paymentId
+    ) {
         return ApiResponse.success(HttpStatus.OK.name(), paymentService.getPayment(userId, paymentId));
     }
 
@@ -55,7 +58,8 @@ public class PaymentController {
     @DeleteMapping("/{paymentId}")
     public ApiResponse<?> deletePayment(
             @RequestHeader("X-USER-ID") Long userId,
-            @PathVariable UUID paymentId) {
+            @PathVariable UUID paymentId
+    ) {
         paymentService.deletePayment(userId, paymentId);
         return ApiResponse.success(HttpStatus.OK.name(), null);
     }
@@ -69,6 +73,17 @@ public class PaymentController {
             Pageable pageable
     ) {
         return ApiResponse.success(HttpStatus.OK.name(), paymentService.getPayments(userId, pageable));
+    }
+
+    /**
+     * 결제 재요청 API
+     */
+    @PutMapping("/{paymentId}/retry")
+    public ApiResponse<?> retryPayment(
+            @RequestHeader("X-USER-ID") Long userId,
+            @PathVariable UUID paymentId
+    ) {
+        return ApiResponse.success(HttpStatus.OK.name(), paymentService.retryPayment(userId, paymentId));
     }
 
 }

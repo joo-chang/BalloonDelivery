@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.N;
 
 import java.util.List;
 import java.util.UUID;
@@ -116,6 +117,22 @@ public class OrderResponse {
                         .price(orderDetail.getPrice())
                         .build();
             }
+        }
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateOrder {
+        private UUID orderId;
+        private UUID paymentId;
+
+        public static CreateOrder toDto(UUID orderId, UUID paymentId) {
+            return CreateOrder.builder()
+                    .orderId(orderId)
+                    .paymentId(paymentId)
+                    .build();
         }
     }
 }

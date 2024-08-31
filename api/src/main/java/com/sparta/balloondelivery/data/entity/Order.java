@@ -57,6 +57,10 @@ public class Order extends BaseEntity {
         orderDetail.setOrder(this);
     }
 
+    public void updateRequest(String request) {
+        this.request = request;
+    }
+
     public enum OrderStatus {
         // 결제 대기, 결제 실패, 주문 취소, 주문 대기, 조리 중, 주문 완료
         WAITING_FOR_PAYMENT, PAYMENT_FAILED, CANCELED, WAITING_FOR_ORDER, COOKING, COMPLETED

@@ -16,4 +16,13 @@ public class OrderRequest {
         private List<OrderItemDto> orderItems;
     }
 
+    @Getter
+    public static class UpdateOrder {
+        private String request;
+    }
+
+    @Getter
+    public class UpdateOrderStatus {
+        private String status;
+    }
 }

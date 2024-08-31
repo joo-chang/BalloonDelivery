@@ -9,6 +9,8 @@ import com.sparta.balloondelivery.order.dto.OrderRequest;
 import com.sparta.balloondelivery.order.dto.OrderResponse;
 import com.sparta.balloondelivery.util.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +28,10 @@ public class OrderService {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    public UUID createOrder(String userId, OrderRequest.CreateOrder createOrder) {
+    public OrderResponse.CreateOrder createOrder(Long userId, OrderRequest.CreateOrder createOrder) {
 
         // 유저 정보 체크, 가게 정보 체크
-        User user = userRepository.findById(Long.parseLong(userId))
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findById(createOrder.getRestaurantId())
                 .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
@@ -67,11 +69,12 @@ public class OrderService {
 
         paymentRepository.save(payment);
 
-        return order.getId();
+        return OrderResponse.CreateOrder.toDto(order.getId(), payment.getId());
     }
 
-    public List<OrderResponse.MyOrderList> getMyOrders(String userId) {
-        User user = userRepository.findById(Long.parseLong(userId))
+    // 주문 조회
+    public List<OrderResponse.MyOrderList> getMyOrders(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
         List<Order> orders = orderRepository.findByUserId(user.getId());
@@ -81,30 +84,32 @@ public class OrderService {
                 .toList();
     }
 
-    public List<OrderResponse.RestaurantOrderList> getRestaurantOrders(String userId, UUID restaurantId) {
-        userRepository.findById(Long.parseLong(userId))
+    // 가게 주문 조회
+    public List<OrderResponse.RestaurantOrderList> getRestaurantOrders(Long userId, UUID restaurantId) {
+
+        userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
 
-        List<Order> orders = orderRepository.findByRestaurantRestaurantIdOrderByCreatedAtDesc(restaurant.getRestaurantId());
+        List<Order> orders = orderRepository.findByRestaurantRestaurantIdAndDeletedYnFalseOrderByCreatedAtDesc(restaurant.getRestaurantId());
 
         return orders.stream()
                 .map(OrderResponse.RestaurantOrderList::toDto)
                 .toList();
     }
 
-    public OrderResponse.OrderDetailResponse getOrderDetail(String userId, UUID orderId) {
-        userRepository.findById(Long.parseLong(userId))
+    public OrderResponse.OrderDetailResponse getOrderDetail(Long userId, UUID orderId) {
+        userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-        Order order = orderRepository.findByIdAndUserId(orderId, Long.parseLong(userId));
+        Order order = orderRepository.findByIdAndUserId(orderId, userId);
 
         return OrderResponse.OrderDetailResponse.toDto(order);
     }
 
-    public void cancelOrder(String userId, String role, UUID orderId) {
-        User user = userRepository.findById(Long.parseLong(userId))
+    public void cancelOrder(Long userId, String role, UUID orderId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
         Order order = orderRepository.findByIdAndUserId(orderId, user.getId());
@@ -131,5 +136,43 @@ public class OrderService {
         }
 
         order.updateOrder(Order.OrderStatus.CANCELED);
+    }
+
+    public Page<OrderResponse.MyOrderList> searchOrder(Long userId, String restaurantName, Pageable pageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Page<Order> orders = orderRepository.searchOrders(user.getId(), restaurantName, pageable);
+
+        return orders.map(OrderResponse.MyOrderList::toDto);
+    }
+
+    public void updateOrder(Long userId, UUID orderId, OrderRequest.UpdateOrder updateOrder) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Order order = orderRepository.findByIdAndUserId(orderId, user.getId());
+
+        order.updateRequest(updateOrder.getRequest());
+    }
+
+
+    public void deleteOrder(Long userId, UUID orderId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
+        Order order = orderRepository.findByIdAndUserId(orderId, user.getId());
+
+        order.setDeletedYnTrue(user.getUsername());
+    }
+
+    public void updateOrderStatus(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BaseException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (order.getOrderStatus() != Order.OrderStatus.WAITING_FOR_ORDER) {
+            throw new BaseException(ErrorCode.ORDER_CANNOT_BE_UPDATED);
+        }
+        order.updateOrder(Order.OrderStatus.COOKING);
     }
 }

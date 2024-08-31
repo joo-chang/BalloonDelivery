@@ -28,7 +28,7 @@ public enum ErrorCode {
     PAYMENT_CANCEL_FAILED("결제 취소에 실패했습니다."),
     ORDER_CANNOT_BE_CANCELED("주문이 진행 중이어서 취소할 수 없습니다."),
     ADDRESS_LIMIT("배송지는 최대 10개까지만 등록 가능합니다."),
-    ;
+    ORDER_CANNOT_BE_UPDATED("주문 상태 변경 가능한 상태가 아닙니다."),;
 
 
     private final String status;
