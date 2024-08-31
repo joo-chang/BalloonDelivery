@@ -1,0 +1,7 @@
+package com.sparta.balloondelivery.data.repository;
+
+import com.sparta.balloondelivery.data.entity.Report;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReportRepository extends JpaRepository<Report, Long> {
+}
