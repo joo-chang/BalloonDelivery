@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,7 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final RestaurantRepository restaurantRepository;
 
+
     /**
      * 메뉴 생성
      *
@@ -35,6 +37,8 @@ public class MenuService {
      */
     @Transactional
     public MenuCreateResponse createMenu(MenuCreateRequest request) {
+
+
 
         // 메뉴를 생성하기 위해 필요한 레스토랑을 가져옴
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())

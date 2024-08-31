@@ -6,6 +6,7 @@ import com.sparta.balloondelivery.menu.dto.request.MenuUpdateRequest;
 import com.sparta.balloondelivery.menu.dto.response.MenuCreateResponse;
 import com.sparta.balloondelivery.menu.dto.response.MenuInfoResponse;
 import com.sparta.balloondelivery.menu.dto.response.MenuUpdateResponse;
+import com.sparta.balloondelivery.menu.service.MenuAIService;
 import com.sparta.balloondelivery.menu.service.MenuSearchService;
 import com.sparta.balloondelivery.menu.service.MenuService;
 import com.sparta.balloondelivery.util.ApiResponse;
@@ -23,13 +24,26 @@ public class MenuController {
 
     private final MenuService menuService;
     private final MenuSearchService menuSearchService;
+    private final MenuAIService menuAIService;
 
     @Autowired
-    public MenuController(MenuService menuService, MenuSearchService menuSearchService) {
+    public MenuController(MenuService menuService, MenuSearchService menuSearchService, MenuAIService menuAIService) {
         this.menuService = menuService;
         this.menuSearchService = menuSearchService;
+        this.menuAIService = menuAIService;
     }
 
+//    /**
+//     * 메뉴 생성 API
+//     */
+//    @PostMapping
+//    public ApiResponse<MenuCreateResponse> createMenu(
+//            @RequestBody MenuCreateRequest request
+//    ) {
+//        log.info("Menu creation request received");
+//        MenuCreateResponse response = menuService.createMenu(request);
+//        return ApiResponse.success("", response, "메뉴 등록 성공");
+//    }
     /**
      * 메뉴 생성 API
      */
@@ -38,6 +52,12 @@ public class MenuController {
             @RequestBody MenuCreateRequest request
     ) {
         log.info("Menu creation request received");
+
+        // AI로 content 생성
+        String generatedContent = menuAIService.createMenuContents(request.getName());
+        request.setContent(generatedContent);
+
+        // 메뉴 생성
         MenuCreateResponse response = menuService.createMenu(request);
         return ApiResponse.success("", response, "메뉴 등록 성공");
     }
