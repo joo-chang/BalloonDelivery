@@ -6,6 +6,7 @@ import com.sparta.balloondelivery.menu.dto.request.MenuUpdateRequest;
 import com.sparta.balloondelivery.menu.dto.response.MenuCreateResponse;
 import com.sparta.balloondelivery.menu.dto.response.MenuInfoResponse;
 import com.sparta.balloondelivery.menu.dto.response.MenuUpdateResponse;
+import com.sparta.balloondelivery.menu.service.MenuSearchService;
 import com.sparta.balloondelivery.menu.service.MenuService;
 import com.sparta.balloondelivery.util.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +22,12 @@ import java.util.UUID;
 public class MenuController {
 
     private final MenuService menuService;
+    private final MenuSearchService menuSearchService;
 
     @Autowired
-    public MenuController(MenuService menuService) {
+    public MenuController(MenuService menuService, MenuSearchService menuSearchService) {
         this.menuService = menuService;
+        this.menuSearchService = menuSearchService;
     }
 
     /**
@@ -84,5 +87,20 @@ public class MenuController {
         return ApiResponse.success("", response, "메뉴 상태 변경 성공");
     }
 
+    /**
+     * 메뉴 검색 API
+     */
+    @GetMapping("/search")
+    public ApiResponse<List<MenuInfoResponse>> searchMenus(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) UUID restaurantId,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        List<MenuInfoResponse> response = menuSearchService.searchMenus(name, restaurantId, minPrice, maxPrice, page, size);
+        return ApiResponse.success("메뉴 검색 성공", response);
+    }
 
 }
