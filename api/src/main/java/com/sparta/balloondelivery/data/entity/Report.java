@@ -22,6 +22,7 @@ public class Report extends BaseEntity {
     // 신고 제목, 내용, 신고자, 신고 처리자, 신고 상태(신고 접수, 신고 처리 중, 신고 처리 완료), 신고 답변, 신고 처리 일자
     @Id
     private UUID id;
+    private Long userId;
     private String title;
     private String content;
     private String reporter;
@@ -32,8 +33,9 @@ public class Report extends BaseEntity {
     private String processDate;
 
 
-    public Report(String title, String content, String userName) {
+    public Report(String title, String content, String userName, Long userId) {
         this.id = UUID.randomUUID();
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.reporter = userName;
