@@ -46,4 +46,30 @@ public class NoticeService {
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }
     }
+
+    public void deleteNotice(UUID noticeId, String userName) {
+        try {
+            Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new BaseException(ErrorCode.INVALID_PARAMETER));
+            notice.setDeletedYnTrue(userName);
+            noticeRepository.save(notice);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
+    }
+
+    public void updateNotice(UUID noticeId, String userName, NoticeReqDto noticeReqDto) {
+        try {
+            Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new BaseException(ErrorCode.INVALID_PARAMETER));
+            if(noticeReqDto.getTitle() != null) {
+                notice.setTitle(noticeReqDto.getTitle());
+            }
+            if(noticeReqDto.getContent() != null) {
+                notice.setContent(noticeReqDto.getContent());
+            }
+            notice.setUpdatedBy(userName);
+            noticeRepository.save(notice);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
+    }
 }

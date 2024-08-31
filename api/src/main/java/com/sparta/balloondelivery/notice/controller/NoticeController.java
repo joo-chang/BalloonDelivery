@@ -41,4 +41,27 @@ public class NoticeController {
     public ApiResponse<?> getNotice(@PathVariable UUID noticeId) {
         return ApiResponse.success("OK", noticeService.getNotice(noticeId), SuccessCode.FIND_SUCCESS.getSuccessMsg());
     }
+
+    @DeleteMapping("/{noticeId}")
+    public ApiResponse<?> deleteNotice(@PathVariable UUID noticeId,
+                                       @RequestHeader(value = "X-User-Role", required = true) String userRole,
+                                       @RequestHeader(value = "X-User-Name", required = true) String userName) {
+        if (!userRole.equals(UserRole.MANAGER.name())) {
+            throw new BaseException(ErrorCode.NO_PERMISSION);
+        }
+        noticeService.deleteNotice(noticeId, userName);
+        return ApiResponse.success("OK", SuccessCode.DELETE_SUCCESS.getSuccessMsg());
+    }
+
+    @PatchMapping("/{noticeId}")
+    public ApiResponse<?> updateNotice(@PathVariable UUID noticeId,
+                                       @RequestHeader(value = "X-User-Role", required = true) String userRole,
+                                       @RequestHeader(value = "X-User-Name", required = true) String userName,
+                                       @RequestBody NoticeReqDto noticeReqDto) {
+        if (!userRole.equals(UserRole.MANAGER.name())) {
+            throw new BaseException(ErrorCode.NO_PERMISSION);
+        }
+        noticeService.updateNotice(noticeId, userName, noticeReqDto);
+        return ApiResponse.success("OK", SuccessCode.UPDATE_SUCCESS.getSuccessMsg());
+    }
 }

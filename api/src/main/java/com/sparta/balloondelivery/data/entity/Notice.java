@@ -3,10 +3,7 @@ package com.sparta.balloondelivery.data.entity;
 import com.sparta.balloondelivery.util.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -18,7 +15,9 @@ import java.util.UUID;
 public class Notice extends BaseEntity {
     @Id
     private UUID id;
+    @Setter
     private String title;
+    @Setter
     private String content;
 
     public Notice(String title, String content) {
@@ -26,4 +25,5 @@ public class Notice extends BaseEntity {
         this.title = title;
         this.content = content;
     }
+
 }
