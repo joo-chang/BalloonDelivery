@@ -117,20 +117,20 @@ public class RestaurantController {
     }
 
     /**
-     * 가게 검색 API
+     * 레스토랑 검색 API
      */
-    @GetMapping("/restaurants/search")
+    @GetMapping("/search")
     public ApiResponse<List<RestaurantInfoResponse>> searchRestaurants(
             @RequestHeader("X-User-Role") String userRole,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) UUID categoryId,
-            @RequestParam(required = false) UUID locationId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy
     ) {
-        checkUserRole(userRole, Set.of("MANAGER", "OWNER", "USER"));
-        List<RestaurantInfoResponse> response = restaurantSearchService.searchRestaurants(name, categoryId, locationId, page, size);
-        return ApiResponse.success("OK", response, "가게 검색 성공");
+        checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER", "USER"));
+
+        List<RestaurantInfoResponse> response = restaurantSearchService.searchRestaurants(name, page, size, sortBy);
+        return ApiResponse.success("OK", response, "레스토랑 검색 성공");
     }
 
     /**

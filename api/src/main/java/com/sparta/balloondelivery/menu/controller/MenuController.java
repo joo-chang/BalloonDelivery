@@ -126,15 +126,13 @@ public class MenuController {
     public ApiResponse<List<MenuInfoResponse>> searchMenus(
             @RequestHeader("X-User-Role") String userRole,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) UUID restaurantId,
-            @RequestParam(required = false) Integer minPrice,
-            @RequestParam(required = false) Integer maxPrice,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy
     ) {
         checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER", "USER"));
 
-        List<MenuInfoResponse> response = menuSearchService.searchMenus(name, restaurantId, minPrice, maxPrice, page, size);
+        List<MenuInfoResponse> response = menuSearchService.searchMenus(name, page, size, sortBy);
         return ApiResponse.success("OK", response, "메뉴 검색 성공");
     }
 
