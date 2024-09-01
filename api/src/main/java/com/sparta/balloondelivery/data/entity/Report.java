@@ -25,11 +25,10 @@ public class Report extends BaseEntity {
     @Setter
     private String content;
     private String reporter;
-    private String processor;
     @Enumerated(EnumType.STRING)
+    @Setter
     private ReportStatus reportStatus;
-    private String answer;
-    private String processDate;
+
 
 
     public Report(String title, String content, String userName, Long userId) {

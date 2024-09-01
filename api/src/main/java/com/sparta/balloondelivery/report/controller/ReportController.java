@@ -4,6 +4,7 @@ import com.sparta.balloondelivery.data.entity.UserRole;
 import com.sparta.balloondelivery.report.dto.ReportReqDto;
 import com.sparta.balloondelivery.report.service.ReportService;
 import com.sparta.balloondelivery.util.ApiResponse;
+import com.sparta.balloondelivery.util.ErrorCode;
 import com.sparta.balloondelivery.util.SuccessCode;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +42,6 @@ public class ReportController {
         return ApiResponse.success("OK", reportService.getReport(reportId, userRole, userId), SuccessCode.FIND_SUCCESS.getSuccessMsg());
     }
 
-    //TODO 질문 수정, 질문 삭제, 답변 생성, 답변 수정, 답변 삭제
-
     @PatchMapping("/{reportId}")
     public ApiResponse<?> updateReport(@PathVariable UUID reportId,
                                        @RequestHeader(value = "X-User-Id", required = true) String userId,
@@ -60,4 +59,51 @@ public class ReportController {
         reportService.deleteReport(reportId, userId, userName, userRole);
         return ApiResponse.success("OK", SuccessCode.DELETE_SUCCESS.getSuccessMsg());
     }
+
+    @PostMapping("/{reportId}/answer")
+    public ApiResponse<?> createAnswer(@PathVariable UUID reportId,
+                                       @RequestHeader(value = "X-User-Id", required = true) String userId,
+                                       @RequestHeader(value = "X-User-Name", required = true) String userName,
+                                       @RequestHeader(value = "X-User-Role", required = true) String userRole,
+                                       @RequestBody ReportReqDto reportReqDto) {
+        if(!userRole.equals(UserRole.MANAGER.name())) {
+            return ApiResponse.fail(ErrorCode.AUTHORIZATION_FAIL);
+        }
+        reportService.createAnswer(reportId, userId, userName, reportReqDto);
+        return ApiResponse.success("OK", SuccessCode.SUCCESS.getSuccessMsg());
+    }
+
+    @GetMapping("/{reportId}/answer")
+    public ApiResponse<?> getAnswer(@PathVariable UUID reportId,
+                                    @RequestHeader(value = "X-User-Id", required = true) String userId,
+                                    @RequestHeader(value = "X-User-Role", required = true) String userRole) {
+        return ApiResponse.success("OK", reportService.getAnswer(reportId, userRole, userId), SuccessCode.FIND_SUCCESS.getSuccessMsg());
+    }
+
+    @PatchMapping("/{reportId}/answer")
+    public ApiResponse<?> updateAnswer(@PathVariable UUID reportId,
+                                       @RequestHeader(value = "X-User-Id", required = true) String userId,
+                                       @RequestHeader(value = "X-User-Name", required = true) String userName,
+                                       @RequestHeader(value = "X-User-Role", required = true) String userRole,
+                                       @RequestBody ReportReqDto reportReqDto) {
+        if (!userRole.equals(UserRole.MANAGER.name())) {
+            return ApiResponse.fail(ErrorCode.AUTHORIZATION_FAIL);
+        }
+        reportService.updateAnswer(reportId, userId, userName, reportReqDto);
+        return ApiResponse.success("OK", SuccessCode.SUCCESS.getSuccessMsg());
+    }
+
+    @DeleteMapping("/{reportId}/answer")
+    public ApiResponse<?> deleteAnswer(@PathVariable UUID reportId,
+                                       @RequestHeader(value = "X-User-Id", required = true) String userId,
+                                       @RequestHeader(value = "X-User-Name", required = true) String userName,
+                                       @RequestHeader(value = "X-User-Role", required = true) String userRole) {
+        if (!userRole.equals(UserRole.MANAGER.name())) {
+            return ApiResponse.fail(ErrorCode.AUTHORIZATION_FAIL);
+        }
+        reportService.deleteAnswer(reportId, userId, userName);
+        return ApiResponse.success("OK", SuccessCode.SUCCESS.getSuccessMsg());
+    }
+
+
 }
