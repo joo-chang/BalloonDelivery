@@ -7,12 +7,14 @@ import com.sparta.balloondelivery.exception.BaseException;
 import com.sparta.balloondelivery.report.dto.ReportReqDto;
 import com.sparta.balloondelivery.report.dto.ReportResDto;
 import com.sparta.balloondelivery.util.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class ReportService {
     private final ReportRepository reportRepository;
@@ -53,4 +55,36 @@ public class ReportService {
         }
     }
 
+    public void updateReport(UUID reportId, String userId, String userName, ReportReqDto reportReqDto) {
+        try {
+            Report report = reportRepository.findById(reportId).orElseThrow(() -> new BaseException(ErrorCode.INVALID_PARAMETER));
+            if (!report.getUserId().equals(Long.parseLong(userId))) {
+                throw new BaseException(ErrorCode.NO_PERMISSION);
+            }
+            if(reportReqDto.getTitle() != null) {
+                report.setTitle(reportReqDto.getTitle());
+            }
+            if(reportReqDto.getContent() != null) {
+                report.setContent(reportReqDto.getContent());
+            }
+            report.setUpdatedBy(userName);
+            reportRepository.save(report);
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
+    }
+
+    public void deleteReport(UUID reportId, String userId, String userName, String userRole) {
+        try {
+            Report report = reportRepository.findById(reportId).orElseThrow(() -> new BaseException(ErrorCode.INVALID_PARAMETER));
+            if (!report.getUserId().equals(Long.parseLong(userId)) && !userRole.equals(UserRole.MANAGER.name())) {
+                throw new BaseException(ErrorCode.NO_PERMISSION);
+            }
+            report.setDeletedYnTrue(userName);
+            reportRepository.save(report);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
+    }
 }

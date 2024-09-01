@@ -5,10 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -23,7 +20,9 @@ public class Report extends BaseEntity {
     @Id
     private UUID id;
     private Long userId;
+    @Setter
     private String title;
+    @Setter
     private String content;
     private String reporter;
     private String processor;
@@ -42,4 +41,6 @@ public class Report extends BaseEntity {
         this.reportStatus = ReportStatus.REPORTED;
         this.setCreatedBy(userName);
     }
+
+
 }
