@@ -1,19 +1,20 @@
 package com.sparta.balloondelivery.restaurant.controller;
 
+import com.sparta.balloondelivery.exception.BaseException;
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantCreateRequest;
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantUpdateRequest;
 import com.sparta.balloondelivery.restaurant.dto.response.*;
 import com.sparta.balloondelivery.restaurant.service.RestaurantSearchService;
 import com.sparta.balloondelivery.restaurant.service.RestaurantService;
 import com.sparta.balloondelivery.util.ApiResponse;
-import lombok.extern.slf4j.Slf4j;
+import com.sparta.balloondelivery.util.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-@Slf4j
 @RestController
 public class RestaurantController {
 
@@ -26,17 +27,24 @@ public class RestaurantController {
         this.restaurantSearchService = restaurantSearchService;
     }
 
+    private void checkUserRole(String userRole, Set<String> allowRole) {
+        if (!allowRole.contains(userRole)) {
+            throw new BaseException(ErrorCode.NO_PERMISSION);
+        }
+    }
+
     /**
      * 가게 등록 API
      */
     @PostMapping("/restaurants")
     public ApiResponse<RestaurantCreateResponse> createRestaurant(
             @RequestHeader("X-User-Id") Long userId,
+            @RequestHeader("X-User-Role") String userRole,
             @RequestBody RestaurantCreateRequest request
     ) {
-        log.info("Received userId: {}", userId);
+        checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER"));
         RestaurantCreateResponse response = restaurantService.createRestaurant(userId, request);
-        return ApiResponse.success("", response, "가게 등록 성공");
+        return ApiResponse.success("OK", response, "가게 등록 성공");
     }
 
     /**
@@ -44,10 +52,12 @@ public class RestaurantController {
      */
     @GetMapping("/restaurants/{restaurant_id}")
     public ApiResponse<RestaurantInfoResponse> getRestaurantInfo(
+            @RequestHeader("X-User-Role") String userRole,
             @PathVariable("restaurant_id") UUID id
     ) {
+        checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER", "USER"));
         RestaurantInfoResponse response = restaurantService.getRestaurantInfo(id);
-        return ApiResponse.success("", response, "가게 정보 조회 성공");
+        return ApiResponse.success("OK", response, "가게 정보 조회 성공");
     }
 
     /**
@@ -55,11 +65,13 @@ public class RestaurantController {
      */
     @PutMapping("/restaurants/{restaurant_id}")
     public ApiResponse<RestaurantUpdateResponse> updateRestaurant(
+            @RequestHeader("X-User-Role") String userRole,
             @PathVariable("restaurant_id") UUID id,
             @RequestBody RestaurantUpdateRequest request
     ) {
+        checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER"));
         RestaurantUpdateResponse response = restaurantService.updateRestaurant(id, request);
-        return ApiResponse.success("", response, "가게 정보 수정 성공");
+        return ApiResponse.success("OK", response, "가게 정보 수정 성공");
     }
 
     /**
@@ -67,23 +79,28 @@ public class RestaurantController {
      */
     @GetMapping("/restaurants")
     public ApiResponse<RestaurantPageInfoResponse> getAllRestaurantInfo(
+            @RequestHeader("X-User-Role") String userRole,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
+        checkUserRole(userRole, Set.of("MANAGER", "OWNER", "USER"));
         RestaurantPageInfoResponse response = restaurantService.getAllRestaurantInfo(page, size);
-        return ApiResponse.success("", response, "가게 목록 조회 성공");
+        return ApiResponse.success("OK", response, "가게 목록 조회 성공");
     }
 
+    /**
+     * 내 가게 목록 조회 API
+     */
     @GetMapping("/restaurants/users")
     public ApiResponse<RestaurantPageInfoResponse> getMyRestaurantInfo(
             @RequestHeader("X-User-Id") Long userId,
+            @RequestHeader("X-User-Role") String userRole,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        log.info("Received userId: {}", userId);
-
+        checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER"));
         RestaurantPageInfoResponse response = restaurantService.getMyRestaurantInfo(userId, page, size);
-        return ApiResponse.success("", response, "내 가게 목록 조회 성공");
+        return ApiResponse.success("OK", response, "내 가게 목록 조회 성공");
     }
 
     /**
@@ -91,27 +108,29 @@ public class RestaurantController {
      */
     @PatchMapping("/restaurants/{restaurant_id}/hide")
     public ApiResponse<RestaurantInfoResponse> hideRestaurant(
+            @RequestHeader("X-User-Role") String userRole,
             @PathVariable("restaurant_id") UUID id
     ) {
-        // 서비스에서 상태 변경 및 정보 반환
+        checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER"));
         RestaurantInfoResponse response = restaurantService.hideRestaurant(id);
-        return ApiResponse.success("", response, "가게 표시 상태가 변경되었습니다.");
+        return ApiResponse.success("OK", response, "가게 표시 상태가 변경되었습니다.");
     }
-
 
     /**
      * 가게 검색 API
      */
-    @GetMapping("/search")
+    @GetMapping("/restaurants/search")
     public ApiResponse<List<RestaurantInfoResponse>> searchRestaurants(
+            @RequestHeader("X-User-Role") String userRole,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) UUID categoryId,
             @RequestParam(required = false) UUID locationId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
+        checkUserRole(userRole, Set.of("MANAGER", "OWNER", "USER"));
         List<RestaurantInfoResponse> response = restaurantSearchService.searchRestaurants(name, categoryId, locationId, page, size);
-        return ApiResponse.success("", response, "가게 검색 성공");
+        return ApiResponse.success("OK", response, "가게 검색 성공");
     }
 
     /**
@@ -120,11 +139,12 @@ public class RestaurantController {
     @DeleteMapping("/restaurants/{restaurant_id}")
     public ApiResponse<RestaurantDeletedResponse> deleteRestaurant(
             @RequestHeader("X-User-Id") Long userId,
+            @RequestHeader("X-User-Role") String userRole,
             @PathVariable("restaurant_id") UUID id
     ) {
+        checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER"));
         RestaurantDeletedResponse response = restaurantService.deleteRestaurant(id, userId);
-        return ApiResponse.success("", response, "가게 삭제 성공");
+        return ApiResponse.success("OK", response, "가게 삭제 성공");
     }
 
 }
-
