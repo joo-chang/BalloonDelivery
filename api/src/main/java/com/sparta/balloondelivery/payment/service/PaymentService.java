@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -75,8 +76,6 @@ public class PaymentService {
             throw new BaseException(ErrorCode.PAYMENT_CANCEL_FAILED);
         }
 
-        // 결제 상태 변경
-        payment.updatePayment(Payment.PaymentStatus.CANCELED);
         // 주문 상태 변경
         order.updateOrder(Order.OrderStatus.CANCELED);
     }
@@ -116,17 +115,15 @@ public class PaymentService {
     }
 
     // orderId, 새로운 paymentId 응답
-    public PaymentResponse.RetryPayment retryPayment(Long userId, UUID paymentId) {
+    public PaymentResponse.RetryPayment retryPayment(Long userId, UUID orderId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-        Payment payment = paymentRepository.findByIdAndUserId(paymentId, userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.PAYMENT_NOT_FOUND));
-
-        Order order = payment.getOrder();
-
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BaseException(ErrorCode.ORDER_NOT_FOUND));
+        Payment payment = paymentRepository.findByOrderIdAndDeletedYnFalse(orderId);
         // 기존 결제 상태 변경
-        payment.updatePayment(Payment.PaymentStatus.CANCELED);
+        payment.updatePayment(Payment.PaymentStatus.FAILED);
 
         // 신규 결제 생성
         Payment newPayment = Payment.builder()

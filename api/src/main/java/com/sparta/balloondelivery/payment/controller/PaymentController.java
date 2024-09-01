@@ -78,12 +78,12 @@ public class PaymentController {
     /**
      * 결제 재요청 API
      */
-    @PutMapping("/{paymentId}/retry")
+    @PostMapping("/{orderId}/retry")
     public ApiResponse<?> retryPayment(
             @RequestHeader("X-USER-ID") Long userId,
-            @PathVariable UUID paymentId
+            @PathVariable UUID orderId
     ) {
-        return ApiResponse.success(HttpStatus.OK.name(), paymentService.retryPayment(userId, paymentId));
+        return ApiResponse.success(HttpStatus.OK.name(), paymentService.retryPayment(userId, orderId));
     }
 
 }

@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public class PaymentResponse {
@@ -50,7 +51,7 @@ public class PaymentResponse {
                     .paymentId(payment.getId())
                     .paymentStatus(payment.getPaymentStatus().name())
                     .price(payment.getPrice())
-                    .requestedAt(payment.getRequestedAt().toString())
+                    .requestedAt(payment.getRequestedAt() != null ? payment.getRequestedAt().toString() : null)
                     .createdAt(payment.getCreatedAt().toString())
                     .updatedAt(payment.getUpdatedAt().toString())
                     .orderId(payment.getOrder().getId())
