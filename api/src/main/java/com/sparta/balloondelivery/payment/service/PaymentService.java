@@ -115,20 +115,22 @@ public class PaymentService {
     }
 
     // orderId, 새로운 paymentId 응답
+    @Transactional
     public PaymentResponse.RetryPayment retryPayment(Long userId, UUID orderId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new BaseException(ErrorCode.ORDER_NOT_FOUND));
-        Payment payment = paymentRepository.findByOrderIdAndDeletedYnFalse(orderId);
-        // 기존 결제 상태 변경
-        payment.updatePayment(Payment.PaymentStatus.FAILED);
+
+        Optional<Payment> payment = paymentRepository.findByOrderIdAndDeletedYnFalse(orderId);
+
+        payment.ifPresent(p -> p.updatePayment(Payment.PaymentStatus.FAILED));
 
         // 신규 결제 생성
         Payment newPayment = Payment.builder()
                 .paymentStatus(Payment.PaymentStatus.REQUESTED)
-                .price(payment.getPrice())
+                .price(order.getTotalPrice())
                 .order(order)
                 .user(user)
                 .build();

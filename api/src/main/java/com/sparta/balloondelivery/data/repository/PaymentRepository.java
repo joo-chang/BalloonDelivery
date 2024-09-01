@@ -16,7 +16,7 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
 
     Optional<Payment> findByOrderId(UUID orderId);
 
-    Payment findByOrderIdAndDeletedYnFalse(UUID orderId);
+    Optional<Payment> findByOrderIdAndDeletedYnFalse(UUID orderId);
 
     @Query("SELECT p FROM p_payments p WHERE p.user.id = :userId ")
     Page<Payment> findByUserIdAndDeletedYnFalse(Long userId, Pageable pageable);

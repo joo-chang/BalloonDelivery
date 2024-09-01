@@ -22,6 +22,7 @@ public class OrderResponse {
         private String orderType;
         private Long totalPrice;
         private RestaurantDto restaurantDto;
+        private String createdAt;
 
         public static MyOrderList toDto(Order order) {
             return MyOrderList.builder()
@@ -30,6 +31,7 @@ public class OrderResponse {
                     .orderType(order.getOrderType().name())
                     .totalPrice(order.getTotalPrice())
                     .restaurantDto(RestaurantDto.toDto(order.getRestaurant()))
+                    .createdAt(order.getCreatedAt().toString())
                     .build();
         }
     }
@@ -62,6 +64,7 @@ public class OrderResponse {
         private String orderType;
         private Long totalPrice;
         private String username;
+        private String createdAt;
 
         public static RestaurantOrderList toDto(Order order) {
             return RestaurantOrderList.builder()
@@ -70,6 +73,7 @@ public class OrderResponse {
                     .orderType(order.getOrderType().name())
                     .totalPrice(order.getTotalPrice())
                     .username(order.getUser().getUsername())
+                    .createdAt(order.getCreatedAt().toString())
                     .build();
         }
     }

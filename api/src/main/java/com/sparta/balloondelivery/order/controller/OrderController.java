@@ -41,11 +41,13 @@ public class OrderController {
     /**
      * 가게 주문 조회 API
      */
-    @GetMapping("/{restaurantId}")
+    @GetMapping("/{restaurantId}/restaurant")
     public ApiResponse<?> getRestaurantOrders(
             @RequestHeader(value = "X-User-Id") Long userId,
-            @PathVariable UUID restaurantId) {
-        var response = orderService.getRestaurantOrders(userId, restaurantId);
+            @PathVariable UUID restaurantId,
+            Pageable pageable
+    ) {
+        var response = orderService.getRestaurantOrders(userId, restaurantId, pageable);
         return ApiResponse.success(HttpStatus.OK.name(), response);
     }
 
