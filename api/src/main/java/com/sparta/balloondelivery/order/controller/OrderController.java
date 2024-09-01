@@ -32,8 +32,9 @@ public class OrderController {
      */
     @GetMapping
     public ApiResponse<?> getMyOrders(
-            @RequestHeader(value = "X-User-Id") Long userId) {
-        var response = orderService.getMyOrders(userId);
+            @RequestHeader(value = "X-User-Id") Long userId,
+            Pageable pageable) {
+        var response = orderService.getMyOrders(userId, pageable);
         return ApiResponse.success(HttpStatus.OK.name(), response);
     }
 

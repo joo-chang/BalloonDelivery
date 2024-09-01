@@ -73,15 +73,13 @@ public class OrderService {
     }
 
     // 주문 조회
-    public List<OrderResponse.MyOrderList> getMyOrders(Long userId) {
+    public Page<OrderResponse.MyOrderList> getMyOrders(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-        List<Order> orders = orderRepository.findByUserId(user.getId());
+        Page<Order> orders = orderRepository.findByUserId(user.getId(), pageable);
 
-        return orders.stream()
-                .map(OrderResponse.MyOrderList::toDto)
-                .toList();
+        return orders.map(OrderResponse.MyOrderList::toDto);
     }
 
     // 가게 주문 조회
