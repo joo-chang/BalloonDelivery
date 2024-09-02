@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: BalloonDelivery
+  profiles:
+    include: private, datasource
+
+#  # sql init (data.sql)
+#  sql:
+#    init:
+#      mode: always
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+
+server:
+  port: 19093
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
+      ribbon:
+        eureka:
+          enabled: true

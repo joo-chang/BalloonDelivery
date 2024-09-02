@@ -36,6 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 
-### DB
-*/db/
-/db/**
+application-private.properties
