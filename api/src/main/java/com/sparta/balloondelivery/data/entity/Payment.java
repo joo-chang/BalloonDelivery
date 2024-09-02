@@ -47,13 +47,20 @@ public class Payment extends BaseEntity {
 
     public void updatePayment(PaymentRequest.UpdateOrderStatus updateOrderStatus) {
         this.paymentStatus = PaymentStatus.valueOf(updateOrderStatus.getPaymentStatus());
-        // TODO: 암호화 필요함
-        this.card = updateOrderStatus.getCard();
+        this.card = maskCardNumber(updateOrderStatus.getCard());
         this.requestedAt = updateOrderStatus.getRequestedAt();
         this.approvedAt = updateOrderStatus.getApprovedAt();
     }
 
     public void updatePayment(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public static String maskCardNumber(String cardNumber) {
+        if (cardNumber.length() < 19) {
+            return cardNumber;
+        }
+        // 마지막 4자리를 제외한 나머지 부분을 '*'로 대체
+        return cardNumber.replaceAll("\\b\\d{4}-\\d{4}-\\d{4}", "****-****-****");
     }
 }
