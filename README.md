@@ -78,24 +78,24 @@
 1. 프로젝트 클론
    ```
     git clone https://github.com/yourusername/balloon-delivery.git
-    ```
+   ```
 
-2. application-private.yml, application-datasource.yml 파일 생성
+2. application-private.yml 파일 생성
    <details>
    <summary>(private.yml 작성 예시)</summary>
-   ```private.yml
+   ```yaml
      jwt:
        secret: <your-jwt-secret>
        expiration: <your-expiration-time>
      ADMIN_TOKEN: <your-admin-token>
      ai:
        url: <your-ai-url>
-
    ```
    
+3. application-datasource.yml 파일 생성
    <details>
    <summary>(datasource.yml 작성 예시)</summary>
-   ```private.yml>
+   ```yaml
      spring:
        datasource:
          driver-class-name: org.postgresql.Driver
@@ -115,19 +115,20 @@
          hibernate:
            dialect: org.hibernate.dialect.PostgreSQLDialect
            format_sql: false
+   ```
 
-3. 프로젝트 빌드 및 실행
+4. 프로젝트 빌드 및 실행
    ```
    ./mvnw clean install
    ./mvnw spring-boot:run
    ```
 
-4. 도커 컴포즈로 서비스 실행
+5. 도커 컴포즈로 서비스 실행
    ```
     docker-compose up --build
    ```
 
-5. 서비스 확인
+6. 서비스 확인
 - http://localhost:8080 에서 게이트웨이 서비스가 실행
 - http://localhost:19090 에서 Eureka 서버 실행
    
