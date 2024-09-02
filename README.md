@@ -53,7 +53,7 @@
 
 **Postman Documentation**
 
-![API Document](https://documenter.getpostman.com/view/37961544/2sAXjM4X9z)
+[API Document](https://documenter.getpostman.com/view/37961544/2sAXjM4X9z)
 
 
 ## 주요 기능
