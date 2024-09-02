@@ -49,7 +49,7 @@
 - API doc: `Postman`
 - Communication Tools : `Notion`, `Slack`
 
-### API docs
+## API docs
 
 **Postman Documentation**
 
@@ -136,13 +136,11 @@
    
 ## 트러블 슈팅
 
-> 배포
-> 
-- Eureka 서버, 게이트웨이, API 어플리케이션을 도커 컴포즈 파일로 만들어 배포
-- 동작시켜보니 서비스간 통신이 제대로 이루어지지 않아 401 에러 발생
-- 로그를 확인해보니 gateway에서 호출한 Feign Client 설정이 잘못된것을 확인하여 어플리케이션 이름을 맞춰주고 해결
+- 배포
+1. Eureka 서버, 게이트웨이, API 어플리케이션을 도커 컴포즈 파일로 만들어 배포
+2. 동작시켜보니 서비스간 통신이 제대로 이루어지지 않아 401 에러 발생
+3. 로그를 확인해보니 gateway에서 호출한 Feign Client 설정이 잘못된것을 확인하여 어플리케이션 이름을 맞춰주고 해결
 
-> Exception Handler
-> 
-- Custom Exception Handler를 만들면서 파일 이름 때문에 Exception Handler의 순서가 적용되지 않는 문제 발생 → 예외 처리 로직이 예상과 다르게 처리
-- `@Order` 어노테이션을 사용하여 Exception Handler의 순서를 지정해 적용
+- Exception Handler
+1. Custom Exception Handler를 만들면서 파일 이름 때문에 Exception Handler의 순서가 적용되지 않는 문제 발생 → 예외 처리 로직이 예상과 다르게 처리
+2. `@Order` 어노테이션을 사용하여 Exception Handler의 순서를 지정해 적용
