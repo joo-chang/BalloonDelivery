@@ -46,7 +46,7 @@
 - Login: `JWT`
 - Deploy: `Docker`,  `AWS EC2`
 - AI: `Gemini AI`
-- API doc: `Swagger`
+- API doc: `Postman`
 - Communication Tools : `Notion`, `Slack`
 
 ### API docs
