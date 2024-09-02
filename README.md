@@ -12,7 +12,7 @@
 
 |박주창|김진선|이지선|
 |:---:|:---:|:---:|
-|[joo-chang](https://github.com/joo-chang)|[kimzinsun](https://github.com/kimzinsum)|[easyxun](https://github.com/easyxun)|
+|[joo-chang](https://github.com/joo-chang)|[kimzinsun](https://github.com/kimzinsun)|[easyxun](https://github.com/easyxun)|
 |![](https://avatars.githubusercontent.com/u/63954779?v=4")|![](https://avatars.githubusercontent.com/u/122031650?v=4")|![](https://avatars.githubusercontent.com/u/107982536?v=4)|
 |Leader|||
 
