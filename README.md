@@ -14,8 +14,9 @@
 |:---:|:---:|:---:|
 |[joo-chang](https://github.com/joo-chang)|[kimzinsun](https://github.com/kimzinsun)|[easyxun](https://github.com/easyxun)|
 |![](https://avatars.githubusercontent.com/u/63954779?v=4")|![](https://avatars.githubusercontent.com/u/122031650?v=4")|![](https://avatars.githubusercontent.com/u/107982536?v=4)|
-|Leader|||
+|Leader| | |
 |주문, 결제|유저(인증/인가), 고객센터|가게, 메뉴, AI|
+
 <br>
 
 ## 프로젝트 목적 
@@ -29,7 +30,7 @@
 
 ### 시스템 아키텍처
 
-![Pasted image 20240902163944](https://github.com/user-attachments/assets/33d0cb1b-c8cb-4bb8-b942-8016c6962baf)
+![image](https://github.com/user-attachments/assets/aa5d4856-d971-4465-a4ce-ad695ed7a49b)
 
 
 
