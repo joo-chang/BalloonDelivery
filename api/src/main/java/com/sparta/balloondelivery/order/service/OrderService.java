@@ -89,7 +89,7 @@ public class OrderService {
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
 
-        Page<Order> orders = orderRepository.findByRestaurantRestaurantIdAndDeletedYnFalseOrderByCreatedAtDesc(restaurant.getRestaurantId(), pageable);
+        Page<Order> orders = orderRepository.findByRestaurantIdAndDeletedYnFalseOrderByCreatedAtDesc(restaurant.getId(), pageable);
 
         return orders.map(OrderResponse.RestaurantOrderList::toDto);
     }

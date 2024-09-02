@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface OrderRepository extends JpaRepository<Order, UUID> {
     Page<Order> findByUserId(Long id, Pageable pageable);
 
-    Page<Order> findByRestaurantRestaurantIdAndDeletedYnFalseOrderByCreatedAtDesc(UUID restaurantId, Pageable pageable);
+    Page<Order> findByRestaurantIdAndDeletedYnFalseOrderByCreatedAtDesc(UUID restaurantId, Pageable pageable);
 
     Order findByIdAndUserIdAndDeletedYnFalse(UUID id, Long userId);
 
