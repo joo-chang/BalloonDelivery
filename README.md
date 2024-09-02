@@ -92,6 +92,7 @@
        url: <your-ai-url>
 
    ```
+   
    <details>
    <summary>(datasource.yml 작성 예시)</summary>
    ```private.yml>
@@ -127,8 +128,8 @@
    ```
 
 5. 서비스 확인
-- http://localhost:8080에서 게이트웨이 서비스가 실행
-- http://localhost:19090에서 Eureka 서버 실행
+- http://localhost:8080 에서 게이트웨이 서비스가 실행
+- http://localhost:19090 에서 Eureka 서버 실행
    
 ## 트러블 슈팅
 
