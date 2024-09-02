@@ -49,12 +49,13 @@
 - API doc: `Postman`
 - Communication Tools : `Notion`, `Slack`
 
-## API docs
+### API docs
 
 **Postman Documentation**
 
 [API Document](https://documenter.getpostman.com/view/37961544/2sAXjM4X9z)
 
+<br>
 
 ## 주요 기능
 
@@ -71,6 +72,7 @@
 
 6. **신고 및 답변** : 사용자 및 가게 주인이 신고 글을 작성할 수 있으며, 관리자는 이에 대한 답변을 관리할 수 있습니다.
 
+<br>
 
 ## 프로젝트 실행 방법
 - Java 17, PostgreSQL, Redis 설치
@@ -133,7 +135,9 @@
 6. 서비스 확인
 - http://localhost:8080 에서 게이트웨이 서비스가 실행
 - http://localhost:19090 에서 Eureka 서버 실행
-   
+
+<br>
+
 ## 트러블 슈팅
 
 - 배포
