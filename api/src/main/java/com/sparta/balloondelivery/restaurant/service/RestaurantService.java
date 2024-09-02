@@ -46,7 +46,7 @@ public class RestaurantService {
         address.setAddress1(request.getAddress1());
         address.setAddress2(request.getAddress2());
         address.setAddress3(request.getAddress3());
-        address.setUserId(userId);
+        address.setUser(user);
 
         Address savedAddress = addressRepository.save(address);
 
@@ -84,7 +84,7 @@ public class RestaurantService {
      * @param request
      * @return
      */
-    public RestaurantUpdateResponse updateRestaurant(UUID id, RestaurantUpdateRequest request) {
+    public RestaurantUpdateResponse updateRestaurant(UUID id, RestaurantUpdateRequest request, String username) {
 
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
@@ -117,7 +117,7 @@ public class RestaurantService {
         address.setAddress1(request.getAddress1().orElse(address.getAddress1()));
         address.setAddress2(request.getAddress2().orElse(address.getAddress2()));
         address.setAddress3(request.getAddress3().orElse(address.getAddress3()));
-        address.setUserId(restaurant.getUser().getId());
+        address.setUpdatedBy(username);
         Address savedAddress = addressRepository.save(address);
         restaurant.setAddress(savedAddress);
 

@@ -66,11 +66,12 @@ public class RestaurantController {
     @PutMapping("/restaurants/{restaurant_id}")
     public ApiResponse<RestaurantUpdateResponse> updateRestaurant(
             @RequestHeader("X-User-Role") String userRole,
+            @RequestHeader("X-User-Name") String username,
             @PathVariable("restaurant_id") UUID id,
             @RequestBody RestaurantUpdateRequest request
     ) {
         checkUserRole(userRole, Set.of("MASTER", "MANAGER", "OWNER"));
-        RestaurantUpdateResponse response = restaurantService.updateRestaurant(id, request);
+        RestaurantUpdateResponse response = restaurantService.updateRestaurant(id, request, username);
         return ApiResponse.success("OK", response, "가게 정보 수정 성공");
     }
 
