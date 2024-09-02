@@ -1,5 +1,6 @@
 package com.sparta.balloondelivery.data.entity;
 
+import com.sparta.balloondelivery.util.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -13,13 +14,13 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Category extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "category_id", updatable = false, nullable = false)
-    private UUID categoryId;
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)

@@ -4,10 +4,7 @@ import com.sparta.balloondelivery.data.entity.*;
 import com.sparta.balloondelivery.data.repository.*;
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantCreateRequest;
 import com.sparta.balloondelivery.restaurant.dto.request.RestaurantUpdateRequest;
-import com.sparta.balloondelivery.restaurant.dto.response.RestaurantCreateResponse;
-import com.sparta.balloondelivery.restaurant.dto.response.RestaurantInfoResponse;
-import com.sparta.balloondelivery.restaurant.dto.response.RestaurantPageInfoResponse;
-import com.sparta.balloondelivery.restaurant.dto.response.RestaurantUpdateResponse;
+import com.sparta.balloondelivery.restaurant.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +46,7 @@ public class RestaurantService {
         address.setAddress1(request.getAddress1());
         address.setAddress2(request.getAddress2());
         address.setAddress3(request.getAddress3());
+        address.setUserId(userId);
 
         Address savedAddress = addressRepository.save(address);
 
@@ -63,26 +61,17 @@ public class RestaurantService {
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
 
-        return RestaurantCreateResponse.builder()
-                .restaurantId(savedRestaurant.getRestaurantId())
-                .name(savedRestaurant.getName())
-                .content(savedRestaurant.getContent())
-                .phone(savedRestaurant.getPhone())
-                .userId(savedRestaurant.getUser().getId())
-                .categoryId(savedRestaurant.getCategory().getCategoryId())
-                .locationId(savedRestaurant.getLocation().getLocationId())
-                .addressId(savedRestaurant.getAddress().getId())
-                .build();
+        return RestaurantCreateResponse.toDto(savedRestaurant);
     }
 
     /**
      * 가게 조회
      *
-     * @param restaurantId
+     * @param id
      * @return
      */
-    public RestaurantInfoResponse getRestaurantInfo(UUID restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+    public RestaurantInfoResponse getRestaurantInfo(UUID id) {
+        Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
 
         return RestaurantInfoResponse.toDto(restaurant);
@@ -91,12 +80,13 @@ public class RestaurantService {
     /**
      * 가게 정보 수정
      *
-     * @param restaurantId
+     * @param id
      * @param request
      * @return
      */
-    public RestaurantUpdateResponse updateRestaurant(UUID restaurantId, RestaurantUpdateRequest request) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+    public RestaurantUpdateResponse updateRestaurant(UUID id, RestaurantUpdateRequest request) {
+
+        Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
 
         // 이름 수정 (없으면 기존 값 유지)
@@ -127,21 +117,13 @@ public class RestaurantService {
         address.setAddress1(request.getAddress1().orElse(address.getAddress1()));
         address.setAddress2(request.getAddress2().orElse(address.getAddress2()));
         address.setAddress3(request.getAddress3().orElse(address.getAddress3()));
+        address.setUserId(restaurant.getUser().getId());
         Address savedAddress = addressRepository.save(address);
-
         restaurant.setAddress(savedAddress);
 
         Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
 
-        return RestaurantUpdateResponse.builder()
-                .restaurantId(updatedRestaurant.getRestaurantId())
-                .name(updatedRestaurant.getName())
-                .content(updatedRestaurant.getContent())
-                .phone(updatedRestaurant.getPhone())
-                .categoryId(updatedRestaurant.getCategory().getCategoryId())
-                .locationId(updatedRestaurant.getLocation().getLocationId())
-                .addressId(updatedRestaurant.getAddress().getId())
-                .build();
+        return RestaurantUpdateResponse.toDto(updatedRestaurant);
     }
 
     /**
@@ -216,5 +198,27 @@ public class RestaurantService {
         return RestaurantInfoResponse.toDto(updatedRestaurant);
     }
 
+    /**
+     * 가게 삭제 API
+     * @param restaurantId
+     * @param userId
+     * @return
+     */
+    public RestaurantDeletedResponse deleteRestaurant(UUID restaurantId, Long userId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid restaurant ID"));
+
+        // 삭제 권한 확인
+        if (!restaurant.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("가게 삭제 권한이 없습니다.");
+        }
+
+        // 소프트 삭제 처리
+        restaurant.setDeletedYnTrue("삭제한 사용자 이름"); // 삭제한 사용자 이름은 보통 SecurityContext에서 가져옴
+        restaurantRepository.save(restaurant);
+
+        // 삭제된 가게의 정보 반환
+        return RestaurantDeletedResponse.toDto(restaurant);
+    }
 
 }

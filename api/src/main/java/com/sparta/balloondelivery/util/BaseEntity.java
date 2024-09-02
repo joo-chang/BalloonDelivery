@@ -36,7 +36,6 @@ public class BaseEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
 
-    @LastModifiedBy
     private String deletedBy;
 
     @Temporal(TemporalType.TIMESTAMP)
