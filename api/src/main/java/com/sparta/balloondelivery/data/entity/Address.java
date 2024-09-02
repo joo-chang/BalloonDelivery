@@ -22,9 +22,9 @@ public class Address extends BaseEntity {
     @Column(name = "address_id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "user_id")
-    @JoinColumn(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false, length = 10)
     private String address1;  // 우편번호
@@ -35,17 +35,23 @@ public class Address extends BaseEntity {
     @Column(nullable = false, length = 255)
     private String address3;  // 상세 주소
 
-    public Address(long userId, String address1, String address2, String address3) {
-        this.userId = userId;
+    public Address(String address1, String address2, String address3) {
         this.address1 = address1;
         this.address2 = address2;
         this.address3 = address3;
     }
 
-    public void setAddress(String address1, String address2, String address3) {
+    public Address(User user, String address1, String address2, String address3) {
+        this.user = user;
         this.address1 = address1;
         this.address2 = address2;
         this.address3 = address3;
     }
 
+    public void setAddress(String address1, String address2, String address3, String username) {
+        this.address1 = address1;
+        this.address2 = address2;
+        this.address3 = address3;
+        this.setUpdatedBy(username);
+    }
 }

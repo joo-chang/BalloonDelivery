@@ -89,7 +89,7 @@ public class UserController {
     public ApiResponse<?> addAddress(@RequestHeader(value = "X-User-Id", required = true) String userId,
                                      @RequestHeader(value = "X-User-Name", required = true) String userName,
                                      @Valid @RequestBody AddressReqDto addressReqDto) {
-        userService.addAddress(Long.parseLong(userId), addressReqDto, userName);
+        userService.addAddress(Long.parseLong(userId), addressReqDto);
         return ApiResponse.success("OK", userId, SuccessCode.SUCCESS.getSuccessMsg());
     }
 
