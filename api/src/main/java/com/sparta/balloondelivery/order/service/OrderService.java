@@ -115,11 +115,11 @@ public class OrderService {
 
         // 권한별 주문 취소 가능 여부 체크
         if (role.equals("USER")) {
-            if (order.getOrderStatus() != Order.OrderStatus.WAITING_FOR_PAYMENT) {
+            if (order.getOrderStatus() != Order.OrderStatus.WAITING_FOR_ORDER) {
                 throw new BaseException(ErrorCode.ORDER_CANNOT_BE_CANCELED);
             }
         } else if (role.equals("RESTAURANT")) {
-            if (order.getOrderStatus() != Order.OrderStatus.WAITING_FOR_PAYMENT && order.getOrderStatus() != Order.OrderStatus.COOKING) {
+            if (order.getOrderStatus() != Order.OrderStatus.WAITING_FOR_ORDER && order.getOrderStatus() != Order.OrderStatus.COOKING) {
                 throw new BaseException(ErrorCode.ORDER_CANNOT_BE_CANCELED);
             }
         }
