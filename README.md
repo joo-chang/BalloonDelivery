@@ -72,6 +72,64 @@
 6. **신고 및 답변** : 사용자와 가게 주인은 신고 글을 작성할 수 있고, 관리자는 답변을 작성하고 관리할 수 있는 기능을 제공합니다.
 
 
+## 프로젝트 실행 방법
+- Java 17, PostgreSQL, Redis 설치
+- 프로젝트 클론 및 docker 설치 후 로컬 환경에서 순차적으로 실행
+1. 프로젝트 클론
+   ```
+    git clone https://github.com/yourusername/balloon-delivery.git
+    ```
+
+2. application-private.yml, application-datasource.yml 파일 생성
+   <details>
+   <summary>(private.yml 작성 예시)</summary>
+   ```private.yml
+     jwt:
+       secret: <your-jwt-secret>
+       expiration: <your-expiration-time>
+     ADMIN_TOKEN: <your-admin-token>
+     ai:
+       url: <your-ai-url>
+
+   ```
+   <details>
+   <summary>(datasource.yml 작성 예시)</summary>
+   ```private.yml>
+     spring:
+       datasource:
+         driver-class-name: org.postgresql.Driver
+         url: jdbc:postgresql://<your-database-url>:<your-port>/<your-database-name>
+         name: <your-username>
+         password: <your-password>
+       data:
+         redis:
+           host: <your-redis-host>
+           port: <your-redis-port>
+           username: <your-redis-username>
+           password: <your-redis-password>
+       jpa:
+         hibernate:
+           ddl-auto: update
+       properties:
+         hibernate:
+           dialect: org.hibernate.dialect.PostgreSQLDialect
+           format_sql: false
+
+3. 프로젝트 빌드 및 실행
+   ```
+   ./mvnw clean install
+   ./mvnw spring-boot:run
+   ```
+
+4. 도커 컴포즈로 서비스 실행
+   ```
+    docker-compose up --build
+   ```
+
+5. 서비스 확인
+- http://localhost:8080에서 게이트웨이 서비스가 실행
+- http://localhost:19090에서 Eureka 서버 실행
+   
 ## 트러블 슈팅
 
 > 배포
