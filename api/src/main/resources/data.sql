@@ -13,3 +13,4 @@ INSERT INTO p_restaurants (restaurant_id, user_id, content, name, phone) VALUES 
 
 INSERT INTO p_menus (price, menu_id, restaurant_id, content, name) VALUES (16000, '123d300f-034a-466c-81bc-eafd637e2292', '5e9d300f-034a-466c-81bc-eafd637e2292', '양념치킨', '양념치킨');
 INSERT INTO p_menus (price, menu_id, restaurant_id, content, name) VALUES (15000, '124d300f-034a-466c-81bc-eafd637e2292', '5e9d300f-034a-466c-81bc-eafd637e2292', '후라이드치킨', '후라이드치킨');
+

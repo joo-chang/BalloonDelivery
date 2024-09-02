@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Builder
 public class MenuUpdateResponse {
-    private UUID menuId;
+    private UUID id;
     private String name;
     private Integer price;
     private String content;
@@ -19,12 +19,12 @@ public class MenuUpdateResponse {
 
     public static MenuUpdateResponse toDto(Menu menu) {
         return MenuUpdateResponse.builder()
-                .menuId(menu.getMenuId())
+                .id(menu.getId())
                 .name(menu.getName())
                 .price(menu.getPrice())
                 .content(menu.getContent())
                 .visiable(menu.getVisiable())
-                .restaurantId(menu.getRestaurant().getRestaurantId())
+                .restaurantId(menu.getRestaurant().getId())
                 .build();
     }
 }

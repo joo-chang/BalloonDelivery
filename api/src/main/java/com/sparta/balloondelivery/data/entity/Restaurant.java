@@ -20,7 +20,7 @@ public class Restaurant extends BaseEntity {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "restaurant_id", updatable = false, nullable = false)
-    private UUID restaurantId;
+    private UUID id;
 
     @Column(nullable = false, length = 255)
     private String name;

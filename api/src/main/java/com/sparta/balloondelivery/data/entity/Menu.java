@@ -17,7 +17,7 @@ public class Menu extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "menu_id", columnDefinition = "UUID", updatable = false, nullable = false)
-    private UUID menuId;
+    private UUID id;
 
     @Column(name = "name", length = 255, nullable = false)
     private String name;

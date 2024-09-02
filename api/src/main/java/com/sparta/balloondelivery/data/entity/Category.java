@@ -20,7 +20,7 @@ public class Category extends BaseEntity {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "category_id", updatable = false, nullable = false)
-    private UUID categoryId;
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)

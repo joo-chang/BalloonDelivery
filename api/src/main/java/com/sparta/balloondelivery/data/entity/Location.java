@@ -20,7 +20,7 @@ public class Location extends BaseEntity {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "location_id", updatable = false, nullable = false)
-    private UUID locationId;
+    private UUID id;
 
     @Column(nullable = false, length = 100)
     private String name;
