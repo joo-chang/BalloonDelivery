@@ -1,5 +1,6 @@
 package com.sparta.balloondelivery.data.entity;
 
+import com.sparta.balloondelivery.util.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Restaurant {
+public class Restaurant extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")

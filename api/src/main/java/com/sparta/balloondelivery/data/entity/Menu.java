@@ -1,5 +1,6 @@
 package com.sparta.balloondelivery.data.entity;
 
+import com.sparta.balloondelivery.util.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Menu {
+public class Menu extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "menu_id", columnDefinition = "UUID", updatable = false, nullable = false)
