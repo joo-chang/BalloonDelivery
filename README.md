@@ -38,13 +38,14 @@
 
 ### 시스템 아키텍처
 
-![[Pasted image 20240902163944.png]]
+![Pasted image 20240902163944](https://github.com/user-attachments/assets/33d0cb1b-c8cb-4bb8-b942-8016c6962baf)
+
 
 
 ### ERD
 
-  ![[Pasted image 20240902164001.png]]
-  
+![Pasted image 20240902164001](https://github.com/user-attachments/assets/3d792a80-cf1c-46b7-93ff-13a271a67ff2)
+
 
 ### 기술 스택
 
