@@ -2,11 +2,11 @@
 
 • **프로젝트 명**: 풍선 딜리버리
 
-• **프로젝트 설명**: ‘풍선 딜리버리’는 주문 관리 플랫폼입니다. 사용자는 이 플랫폼을 통해 배달 및 포장 주문을 손쉽게 처리할 수 있으며, 가게 주인은 가게와 메뉴를 관리할 수 있습니다. 또한, 메뉴 등록 시 AI가 자동으로 메뉴 설명을 추천해주는 기능을 제공하여 사용 편의성을 높였습니다. 
+• **프로젝트 설명**: ‘풍선 딜리버리’는 주문 관리 플랫폼입니다. 사용자는 이 플랫폼을 통해 배달 및 포장 주문을 손쉽게 처리할 수 있으며, 가게 주인은 가게와 메뉴를 관리할 수 있습니다. 또한, AI가 자동으로 메뉴 설명을 추천해주는 기능을 제공하여 사용 편의성을 높였습니다. 
 
 • **프로젝트 기간**: 2024년 8월 22일 - 2024년 9월 2일
 
-  <br>
+<br>
   
 ## 팀원
 
@@ -15,7 +15,7 @@
 |[joo-chang](https://github.com/joo-chang)|[kimzinsun](https://github.com/kimzinsun)|[easyxun](https://github.com/easyxun)|
 |![](https://avatars.githubusercontent.com/u/63954779?v=4")|![](https://avatars.githubusercontent.com/u/122031650?v=4")|![](https://avatars.githubusercontent.com/u/107982536?v=4)|
 |Leader|||
-
+|주문, 결제|유저(인증/인가), 고객센터|가게, 메뉴, AI|
 <br>
 
 ## 프로젝트 목적 
@@ -59,17 +59,17 @@
 ## 주요 기능
 
 
-1. **주문 및 결제 기능**: 주문과 결제, 주문 상태를 변경하고 관리할 수 있습니다.
+1. **주문 및 결제 기능**: 주문 및 결제를 진행하고, 주문 상태를 관리할 수 있습니다.
 
-2. **가게 등록 및 메뉴 관리**: 가게를 등록하고, 메뉴를 추가, 수정, 삭제할 수 있습니다.
+2. **가게 등록 및 메뉴 관리**: 가게 등록, 메뉴 추가, 수정, 삭제, 검색 기능을 제공하여 가게 운영의 효율성을 높였습니다.
 
 3. **사용자 권한 관리**: 사용자 역할에 따라 권한을 부여하고 관리할 수 있는 기능을 제공합니다.
 
-4. **AI 기반 메뉴 설명 추천**: 메뉴 등록 시 AI를 이용해 자동으로 메뉴 설명을 추천하는 기능을 통해 편리성을 극대화했습니다.
+4. **AI 기반 메뉴 설명 추천**:  AI 기반 메뉴 설명 추천 기능으로 사용자의 편의성을 극대화했습니다.
 
 5. **공지사항** : 관리자 권한으로 공지사항을 등록하고 관리할 수 있는 기능을 제공합니다.
 
-6. **신고 및 답변** : 사용자와 가게 주인은 신고 글을 작성할 수 있고, 관리자는 답변을 작성하고 관리할 수 있는 기능을 제공합니다.
+6. **신고 및 답변** : 사용자 및 가게 주인이 신고 글을 작성할 수 있으며, 관리자는 이에 대한 답변을 관리할 수 있습니다.
 
 
 ## 프로젝트 실행 방법
@@ -83,38 +83,40 @@
 2. application-private.yml 파일 생성
    <details>
    <summary>(private.yml 작성 예시)</summary>
+     
    ```yaml
-     jwt:
-       secret: <your-jwt-secret>
-       expiration: <your-expiration-time>
-     ADMIN_TOKEN: <your-admin-token>
-     ai:
-       url: <your-ai-url>
+   jwt:
+     secret: <your-jwt-secret>
+     expiration: <your-expiration-time>
+   ADMIN_TOKEN: <your-admin-token>
+   ai:
+     url: <your-ai-url>
    ```
    
 3. application-datasource.yml 파일 생성
    <details>
    <summary>(datasource.yml 작성 예시)</summary>
+
    ```yaml
-     spring:
-       datasource:
-         driver-class-name: org.postgresql.Driver
-         url: jdbc:postgresql://<your-database-url>:<your-port>/<your-database-name>
-         name: <your-username>
-         password: <your-password>
-       data:
-         redis:
-           host: <your-redis-host>
-           port: <your-redis-port>
-           username: <your-redis-username>
-           password: <your-redis-password>
-       jpa:
-         hibernate:
-           ddl-auto: update
-       properties:
-         hibernate:
-           dialect: org.hibernate.dialect.PostgreSQLDialect
-           format_sql: false
+   spring:
+     datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://<your-database-url>:<your-port>/<your-database-name>
+        name: <your-username>
+        password: <your-password>
+   data:
+     redis:
+        host: <your-redis-host>
+        port: <your-redis-port>
+        username: <your-redis-username>
+        password: <your-redis-password>
+     jpa:
+        hibernate:
+          ddl-auto: update
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+            format_sql: false
    ```
 
 4. 프로젝트 빌드 및 실행
