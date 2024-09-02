@@ -58,7 +58,7 @@ public class MenuService {
 
 
         // MenuCreateResponse를 반환
-        return MenuCreateResponse.toDto(menu);
+        return MenuCreateResponse.toDto(savedMenu);
     }
 
     /**

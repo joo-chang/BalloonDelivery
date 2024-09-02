@@ -14,4 +14,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID> {
     // 레스토랑 이름으로 검색 (부분 일치)
     @Query("SELECT r FROM Restaurant r WHERE r.name LIKE %:name%")
     Page<Restaurant> searchByName(@Param("name") String name, Pageable pageable);
+
+    Page<Restaurant> findByUserId(Long userId, Pageable pageable);
 }
