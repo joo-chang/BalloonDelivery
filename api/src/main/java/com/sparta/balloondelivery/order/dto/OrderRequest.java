@@ -9,7 +9,6 @@ public class OrderRequest {
 
     @Getter
     public static class CreateOrder {
-        private Long userId;
         private UUID restaurantId;
         private String orderType;
         private String request;
@@ -17,4 +16,13 @@ public class OrderRequest {
         private List<OrderItemDto> orderItems;
     }
 
+    @Getter
+    public static class UpdateOrder {
+        private String request;
+    }
+
+    @Getter
+    public class UpdateOrderStatus {
+        private String status;
+    }
 }
