@@ -5,10 +5,7 @@ import com.sparta.balloondelivery.data.entity.User;
 import com.sparta.balloondelivery.data.repository.AddressRepository;
 import com.sparta.balloondelivery.data.repository.UserRepository;
 import com.sparta.balloondelivery.exception.BaseException;
-import com.sparta.balloondelivery.user.dto.AddressReqDto;
-import com.sparta.balloondelivery.user.dto.RoleUpdateReqDto;
-import com.sparta.balloondelivery.user.dto.UserReqDto;
-import com.sparta.balloondelivery.user.dto.UserResDto;
+import com.sparta.balloondelivery.user.dto.*;
 import com.sparta.balloondelivery.util.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -93,17 +90,19 @@ public class UserService {
 
 
     @Transactional
-    public void addAddress(long userId, AddressReqDto addressReqDto, String userName) {
+    public void addAddress(long userId, AddressReqDto addressReqDto) {
         try {
             if (addressRepository.countByUserId(userId) >= 10) {
                 throw new BaseException(ErrorCode.ADDRESS_LIMIT);
             }
-            Address address = new Address(userId, addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
-            address.setCreatedBy(userName);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
+            Address address = new Address(user, addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
             addressRepository.save(address);
         } catch (BaseException e) {
             throw e;
         } catch (Exception e) {
+            log.info(e.getMessage());
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }
     }
@@ -111,12 +110,14 @@ public class UserService {
 
     public void updateAddress(long userId, UUID addressId, AddressReqDto addressReqDto, String userName) {
         try {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
             Address address = addressRepository.findById(addressId)
                     .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
-            address.setAddress(addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3());
-            address.setUpdatedBy(userName);
+            address.setAddress(addressReqDto.getAddress1(), addressReqDto.getAddress2(), addressReqDto.getAddress3(), user.getUsername());
             addressRepository.save(address);
         } catch (Exception e) {
+            log.info(e.getMessage());
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }
     }
@@ -132,14 +133,21 @@ public class UserService {
         }
     }
 
-    public Page<Address> getAddress(long userId, Pageable pageable) {
-        return addressRepository.findByUserId(userId, pageable);
+    public Page<AddressResDto> getAddress(long userId, Pageable pageable) {
+        try {
+            Page<Address> addressPage = addressRepository.findByUserId(userId, pageable);
+            return addressPage.map(address -> new AddressResDto(address.getId(), address.getAddress1(), address.getAddress2(), address.getAddress3()));
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_PARAMETER);
+        }
     }
 
-    public Address getAddressById(long userId, UUID addressId) {
+    public AddressResDto getAddressById(long userId, UUID addressId) {
         try {
-            return addressRepository.findById(addressId)
+            Address address = addressRepository.findById(addressId)
                     .orElseThrow(() -> new BaseException(ErrorCode.ENTITY_NOT_FOUND));
+            return new AddressResDto(address.getId(), address.getAddress1(), address.getAddress2(), address.getAddress3());
+
         } catch (Exception e) {
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }

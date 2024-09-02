@@ -1,12 +1,11 @@
 package com.sparta.balloondelivery.report.service;
 
-import com.sparta.balloondelivery.data.entity.Answer;
-import com.sparta.balloondelivery.data.entity.Report;
-import com.sparta.balloondelivery.data.entity.ReportStatus;
-import com.sparta.balloondelivery.data.entity.UserRole;
+import com.sparta.balloondelivery.data.entity.*;
 import com.sparta.balloondelivery.data.repository.AnswerReporitory;
 import com.sparta.balloondelivery.data.repository.ReportRepository;
+import com.sparta.balloondelivery.data.repository.UserRepository;
 import com.sparta.balloondelivery.exception.BaseException;
+import com.sparta.balloondelivery.report.dto.AnswerResDto;
 import com.sparta.balloondelivery.report.dto.ReportReqDto;
 import com.sparta.balloondelivery.report.dto.ReportResDto;
 import com.sparta.balloondelivery.util.ErrorCode;
@@ -22,15 +21,18 @@ import java.util.UUID;
 public class ReportService {
     private final ReportRepository reportRepository;
     private final AnswerReporitory answerReporitory;
+    private final UserRepository userRepository;
 
-    public ReportService(ReportRepository reportRepository, AnswerReporitory answerReporitory) {
+    public ReportService(ReportRepository reportRepository, AnswerReporitory answerReporitory, UserRepository userRepository) {
         this.reportRepository = reportRepository;
         this.answerReporitory = answerReporitory;
+        this.userRepository = userRepository;
     }
 
-    public void createReport(String userId, String userName, ReportReqDto reportReqDto) {
+    public void createReport(String userId, ReportReqDto reportReqDto) {
         try {
-            Report report = new Report(reportReqDto.getTitle(), reportReqDto.getContent(), userName, Long.parseLong(userId));
+            User user = userRepository.findById(Long.parseLong(userId)).orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+            Report report = new Report(reportReqDto.getTitle(), reportReqDto.getContent(),user);
             reportRepository.save(report);
         } catch (Exception e) {
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
@@ -99,7 +101,8 @@ public class ReportService {
             if (!report.getUserId().equals(Long.parseLong(userId))) {
                 throw new BaseException(ErrorCode.NO_PERMISSION);
             }
-            Answer answer = new Answer(reportId, reportReqDto.getTitle(), reportReqDto.getContent(), userName);
+            User user = userRepository.findById(Long.parseLong(userId)).orElseThrow(() -> new BaseException(ErrorCode.INVALID_PARAMETER));
+            Answer answer = new Answer(reportId, reportReqDto.getTitle(), reportReqDto.getContent(), user);
             answerReporitory.save(answer);
             report.setReportStatus(ReportStatus.PROCESSED);
             reportRepository.save(report);
@@ -110,13 +113,14 @@ public class ReportService {
     }
 
 
-    public Answer getAnswer(UUID reportId, String userRole, String userId) {
+    public AnswerResDto getAnswer(UUID reportId, String userRole, String userId) {
         try {
             Report report = reportRepository.findById(reportId).orElseThrow(() -> new BaseException(ErrorCode.INVALID_PARAMETER));
             if (!userRole.equals(UserRole.MANAGER.name()) && !report.getUserId().equals(Long.parseLong(userId))) {
                 throw new BaseException(ErrorCode.NO_PERMISSION);
             }
-            return answerReporitory.findByReportId(reportId).orElseThrow(() -> new BaseException(ErrorCode.INVALID_PARAMETER));
+            return new AnswerResDto(answerReporitory.findByReportId(reportId).orElseThrow(() -> new BaseException(ErrorCode.INVALID_PARAMETER)));
+
         } catch (Exception e) {
             log.info(e.getMessage());
             throw new BaseException(ErrorCode.INVALID_PARAMETER);

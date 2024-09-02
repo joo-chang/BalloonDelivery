@@ -22,9 +22,8 @@ public class ReportController {
 
     @PostMapping("")
     public ApiResponse<?> createReport(@RequestHeader(value = "X-User-Id", required = true) String userId,
-                                       @RequestHeader(value = "X-User-Name", required = true) String userName,
                                        @RequestBody ReportReqDto reportReqDto) {
-        reportService.createReport(userId, userName, reportReqDto);
+        reportService.createReport(userId, reportReqDto);
         return ApiResponse.success("OK", SuccessCode.SUCCESS.getSuccessMsg());
     }
 

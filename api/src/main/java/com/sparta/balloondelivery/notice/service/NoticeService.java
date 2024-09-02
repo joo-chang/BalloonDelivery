@@ -1,7 +1,9 @@
 package com.sparta.balloondelivery.notice.service;
 
 import com.sparta.balloondelivery.data.entity.Notice;
+import com.sparta.balloondelivery.data.entity.User;
 import com.sparta.balloondelivery.data.repository.NoticeRepository;
+import com.sparta.balloondelivery.data.repository.UserRepository;
 import com.sparta.balloondelivery.exception.BaseException;
 import com.sparta.balloondelivery.notice.dto.NoticeReqDto;
 import com.sparta.balloondelivery.notice.dto.NoticeResDto;
@@ -17,14 +19,16 @@ import java.util.UUID;
 @Service
 public class NoticeService {
     private final NoticeRepository noticeRepository;
+    private final UserRepository userRepository;
 
-    public NoticeService(NoticeRepository noticeRepository) {
+    public NoticeService(NoticeRepository noticeRepository, UserRepository userRepository) {
         this.noticeRepository = noticeRepository;
+        this.userRepository = userRepository;
     }
 
-    public void createNotice(String userName, NoticeReqDto noticeReqDto) {
-        Notice notice = new Notice(noticeReqDto.getTitle(), noticeReqDto.getContent());
-        notice.setCreatedBy(userName);
+    public void createNotice(String userId, NoticeReqDto noticeReqDto) {
+        User user = userRepository.findById(Long.parseLong(userId)).orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+        Notice notice = new Notice(noticeReqDto.getTitle(), noticeReqDto.getContent(), user);
         noticeRepository.save(notice);
     }
 
@@ -32,7 +36,6 @@ public class NoticeService {
         try {
             return noticeRepository.findAll(pageable).map(NoticeResDto::new);
         } catch (Exception e) {
-            log.info(e.getMessage());
             throw new BaseException(ErrorCode.INVALID_PARAMETER);
         }
     }

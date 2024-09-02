@@ -13,7 +13,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     @Query("SELECT r FROM p_reports r WHERE r.id = :reportId and r.deletedYn = false ORDER BY r.createdAt DESC")
     Optional<Report> findById(UUID reportId);
 
-    @Query("SELECT r FROM p_reports r WHERE r.userId = :userId and r.deletedYn = false ORDER BY  r.createdAt ASC")
+    @Query("SELECT r FROM p_reports r WHERE r.user.id = :userId and r.deletedYn = false ORDER BY r.createdAt DESC")
     Page<Report> findByUserId(long userId, Pageable pageable);
 
     @Query("SELECT r FROM p_reports r WHERE r.deletedYn = false ORDER BY r.createdAt DESC")

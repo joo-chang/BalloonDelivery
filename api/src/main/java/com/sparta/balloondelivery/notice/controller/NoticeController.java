@@ -23,12 +23,12 @@ public class NoticeController {
 
     @PostMapping("")
     public ApiResponse<?> createNotice(@RequestHeader(value = "X-User-Role", required = true) String userRole,
-                                       @RequestHeader(value = "X-User-Name", required = true) String userName,
+                                       @RequestHeader(value = "X-User-Id", required = true) String userId,
                                        @RequestBody NoticeReqDto noticeReqDto) {
         if (!userRole.equals(UserRole.MANAGER.name())) {
             throw new BaseException(ErrorCode.NO_PERMISSION);
         }
-        noticeService.createNotice(userName, noticeReqDto);
+        noticeService.createNotice(userId, noticeReqDto);
         return ApiResponse.success("OK", SuccessCode.SUCCESS.getSuccessMsg());
     }
 
