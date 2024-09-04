@@ -13,7 +13,7 @@
 |박주창|김진선|이지선|
 |:---:|:---:|:---:|
 |[joo-chang](https://github.com/joo-chang)|[kimzinsun](https://github.com/kimzinsun)|[easyxun](https://github.com/easyxun)|
-|![](https://avatars.githubusercontent.com/u/63954779?v=4")|![](https://avatars.githubusercontent.com/u/122031650?v=4")|![](https://avatars.githubusercontent.com/u/107982536?v=4)|
+|<img src="https://avatars.githubusercontent.com/u/63954779?v=4" alt="Image Description" width="30%" /> | <img src="https://avatars.githubusercontent.com/u/122031650?v=4" alt="Image Description" width="30%" /> | <img src="https://avatars.githubusercontent.com/u/107982536?v=4" alt="Image Description" width="30%" /> |
 |Leader| | |
 |주문, 결제|유저(인증/인가), 고객센터|가게, 메뉴, AI|
 
@@ -32,12 +32,13 @@
 
 ![image](https://github.com/user-attachments/assets/aa5d4856-d971-4465-a4ce-ad695ed7a49b)
 
-
+<br>
 
 ### ERD
 
 ![Pasted image 20240902164001](https://github.com/user-attachments/assets/3d792a80-cf1c-46b7-93ff-13a271a67ff2)
 
+<br>
 
 ### 기술 스택
 
@@ -48,7 +49,9 @@
 - Deploy: `Docker`,  `AWS EC2`
 - AI: `Gemini AI`
 - API doc: `Postman`
-- Communication Tools : `Notion`, `Slack`
+- Communication Tools : `Github`, `Notion`, `Slack`
+
+<br>
 
 ### API docs
 
@@ -124,8 +127,7 @@
 
 4. 프로젝트 빌드 및 실행
    ```
-   ./mvnw clean install
-   ./mvnw spring-boot:run
+    ./gradlew clean build
    ```
 
 5. 도커 컴포즈로 서비스 실행
@@ -134,18 +136,38 @@
    ```
 
 6. 서비스 확인
-- http://localhost:8080 에서 게이트웨이 서비스가 실행
-- http://localhost:19090 에서 Eureka 서버 실행
+- Gateway:8080
+- Eureka:19090
+- BalloonDelivery:19093
 
 <br>
 
 ## 트러블 슈팅
 
-- 배포
-1. Eureka 서버, 게이트웨이, API 어플리케이션을 도커 컴포즈 파일로 만들어 배포
-2. 동작시켜보니 서비스간 통신이 제대로 이루어지지 않아 401 에러 발생
-3. 로그를 확인해보니 gateway에서 호출한 Feign Client 설정이 잘못된것을 확인하여 어플리케이션 이름을 맞춰주고 해결
+### 배포
 
-- Exception Handler
-1. Custom Exception Handler를 만들면서 파일 이름 때문에 Exception Handler의 순서가 적용되지 않는 문제 발생 → 예외 처리 로직이 예상과 다르게 처리
-2. `@Order` 어노테이션을 사용하여 Exception Handler의 순서를 지정해 적용
+#### 문제 상황
+
+- Eureka 서버, 게이트웨이, API 어플리케이션을 도커 컴포즈 파일로 만들어 배포
+- 동작시켜보니 서비스간 통신 실패로 토큰 검증이 제대로 이루어 지지 않아 401 에러 발생
+
+#### 해결 방안
+
+- Feign Client는 Eureka에 등록된 서비스 이름을 기반으로 서비스를 호출
+- 하지만 개발 환경에서 localhost를 사용하여 서비스가 등록되어, Feign Client가 이를 올바르게 인식하지 못하고, 서비스 디스커버리가 제대로 작동하지 않음
+- localhost로 설정된 부분을 Eureka 서버에 등록된 서비스 이름으로 호출 되도록 설정 변경
+
+<br>
+
+### Custom Exception Handler 적용 문제 해결
+
+#### 문제 상황
+
+- Custom Exception Handler를 만들었지만, 파일 이름 때문에 핸들러의 적용 순서가 예상과 다르게 동작
+- 그 결과, 예외가 발생했을 때 예외 처리 로직이 원하는 순서로 적용되지 않음
+
+### 해결 방안
+
+-	스프링에서 예외 처리 핸들러의 적용 순서는 기본적으로 클래스의 이름 순서에 따라 결정
+-	이를 해결하기 위해 @Order 애노테이션을 사용하여 Exception Handler의 적용 순서를 명시적으로 설정
+-	@Order 애노테이션을 통해 예외 핸들러의 우선 순위를 지정하여, 예외 처리 로직이 의도한 대로 순차적으로 적용되도록 설정
