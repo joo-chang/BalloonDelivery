@@ -1,0 +1,43 @@
+services:
+  server:
+    image: openjdk:17-jdk-slim
+    container_name: server
+    networks:
+      - balloon_network
+    command: >
+      java -jar /app/server.jar
+      --eureka.client.register-with-eureka=false
+      --eureka.client.fetch-registry=false
+      --eureka.client.service-url.defaultZone=http://server:19090/eureka
+      --eureka.instance.hostname=server
+      --server.port=19090
+    volumes:
+      - ./server-0.0.1-SNAPSHOT.jar:/app/server.jar
+
+  gateway:
+    image: openjdk:17-jdk-slim
+    container_name: gateway
+    networks:
+      - balloon_network
+    ports:
+      - "8080:8080"
+    entrypoint: ["sh", "-c", "sleep 20 && java -jar /app/gateway.jar --eureka.client.serviceUrl.defaultZone=http://server:19090/eureka/ --eureka.instance.hostname=gateway --server.port=8080"]
+    volumes:
+      - ./gateway-0.0.1-SNAPSHOT.jar:/app/gateway.jar
+    depends_on:
+      - server
+
+  BalloonDelivery:
+    image: openjdk:17-jdk-slim
+    container_name: BalloonDelivery
+    networks:
+      - balloon_network
+    entrypoint: ["sh", "-c", "sleep 40 && java -jar /app/balloon_delivery.jar --eureka.client.serviceUrl.defaultZone=http://server:19090/eureka/ --eureka.instance.hostname=BalloonDelivery --server.port=19093"]
+    volumes:
+      - ./BalloonDelivery-0.0.1-SNAPSHOT.jar:/app/balloon_delivery.jar
+    depends_on:
+      - gateway
+
+networks:
+  balloon_network:
+	driver: bridge
